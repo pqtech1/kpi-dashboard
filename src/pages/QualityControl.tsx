@@ -3,7 +3,14 @@ import { ChartCard } from "@/components/shared/ChartCard";
 import { DataTable } from "@/components/shared/DataTable";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 import { GaugeChart } from "@/components/shared/GaugeChart";
-import { ShieldCheck, Target, AlertTriangle, Clock, XCircle, RotateCcw } from "lucide-react";
+import {
+  ShieldCheck,
+  Target,
+  AlertTriangle,
+  Clock,
+  XCircle,
+  RotateCcw,
+} from "lucide-react";
 import {
   BarChart,
   Bar,
@@ -56,10 +63,34 @@ const customerReturns = [
 ];
 
 const qcQueue = [
-  { batch: "B-2045", items: 128, submitted: "30 min ago", priority: "high", inspector: "QC-01" },
-  { batch: "B-2046", items: 115, submitted: "1 hr ago", priority: "medium", inspector: "QC-02" },
-  { batch: "B-2044", items: 95, submitted: "2 hrs ago", priority: "low", inspector: "Pending" },
-  { batch: "B-2043", items: 142, submitted: "3 hrs ago", priority: "medium", inspector: "QC-01" },
+  {
+    batch: "B-2045",
+    items: 128,
+    submitted: "30 min ago",
+    priority: "high",
+    inspector: "QC-01",
+  },
+  {
+    batch: "B-2046",
+    items: 115,
+    submitted: "1 hr ago",
+    priority: "medium",
+    inspector: "QC-02",
+  },
+  {
+    batch: "B-2044",
+    items: 95,
+    submitted: "2 hrs ago",
+    priority: "low",
+    inspector: "Pending",
+  },
+  {
+    batch: "B-2043",
+    items: 142,
+    submitted: "3 hrs ago",
+    priority: "medium",
+    inspector: "QC-01",
+  },
 ];
 
 const inspectionResults = [
@@ -73,11 +104,18 @@ export default function QualityControl() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="page-header">Phase 6: Quality Control</h1>
-        <p className="text-muted-foreground">
+
+      <div className="flex flex-col items-center text-center space-y-3">
+        <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+          Quality Control
+        </h1>
+
+        <p className="max-w-xl text-sm sm:text-base text-muted-foreground">
           Track product quality metrics before delivery
         </p>
+
+        {/* Decorative divider */}
+        <div className="mt-2 h-1 w-14 rounded-full bg-primary/60" />
       </div>
 
       {/* KPI Cards */}
@@ -130,7 +168,11 @@ export default function QualityControl() {
 
       {/* FPY & DPMO */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <ChartCard title="First Pass Yield Trend" subtitle="Weekly FPY vs target" className="lg:col-span-2">
+        <ChartCard
+          title="First Pass Yield Trend"
+          subtitle="Weekly FPY vs target"
+          className="lg:col-span-2"
+        >
           <ResponsiveContainer width="100%" height={280}>
             <AreaChart data={fpyTrend}>
               <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
@@ -165,11 +207,18 @@ export default function QualityControl() {
 
         <ChartCard title="Quality Score">
           <div className="flex flex-col items-center space-y-4 py-4">
-            <GaugeChart value={96} label="Overall Quality" size="lg" variant="success" />
+            <GaugeChart
+              value={96}
+              label="Overall Quality"
+              size="lg"
+              variant="success"
+            />
             <div className="grid grid-cols-2 gap-4 w-full text-center">
               <div className="p-2 bg-muted/50 rounded-lg">
                 <p className="text-lg font-bold text-success">99.84%</p>
-                <p className="text-xs text-muted-foreground">Outgoing Quality</p>
+                <p className="text-xs text-muted-foreground">
+                  Outgoing Quality
+                </p>
               </div>
               <div className="p-2 bg-muted/50 rounded-lg">
                 <p className="text-lg font-bold text-primary">4.2σ</p>
@@ -182,7 +231,10 @@ export default function QualityControl() {
 
       {/* DPMO & Rejection Analysis */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <ChartCard title="DPMO by Category" subtitle="Defects per million opportunities">
+        <ChartCard
+          title="DPMO by Category"
+          subtitle="Defects per million opportunities"
+        >
           <ResponsiveContainer width="100%" height={240}>
             <BarChart data={dpmoData}>
               <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
@@ -197,12 +249,21 @@ export default function QualityControl() {
               />
               <Legend />
               <Bar dataKey="dpmo" fill="hsl(var(--primary))" name="DPMO" />
-              <Line type="monotone" dataKey="target" stroke="hsl(var(--destructive))" name="Target" strokeDasharray="5 5" />
+              <Line
+                type="monotone"
+                dataKey="target"
+                stroke="hsl(var(--destructive))"
+                name="Target"
+                strokeDasharray="5 5"
+              />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>
 
-        <ChartCard title="Internal Rejection Analysis" subtitle="Rejection reasons breakdown">
+        <ChartCard
+          title="Internal Rejection Analysis"
+          subtitle="Rejection reasons breakdown"
+        >
           <div className="flex items-center gap-6">
             <ResponsiveContainer width="50%" height={220}>
               <PieChart>
@@ -230,7 +291,9 @@ export default function QualityControl() {
                     style={{ backgroundColor: item.color }}
                   />
                   <span className="text-sm">{item.name}</span>
-                  <span className="text-sm font-semibold ml-auto">{item.value}%</span>
+                  <span className="text-sm font-semibold ml-auto">
+                    {item.value}%
+                  </span>
                 </div>
               ))}
             </div>
@@ -240,7 +303,10 @@ export default function QualityControl() {
 
       {/* Customer Returns & QC Queue */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <ChartCard title="Customer Returns Trend" subtitle="Monthly returns vs shipments">
+        <ChartCard
+          title="Customer Returns Trend"
+          subtitle="Monthly returns vs shipments"
+        >
           <ResponsiveContainer width="100%" height={220}>
             <LineChart data={customerReturns}>
               <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
@@ -255,8 +321,20 @@ export default function QualityControl() {
                 }}
               />
               <Legend />
-              <Line yAxisId="right" type="monotone" dataKey="shipped" stroke="hsl(var(--primary))" name="Shipped" />
-              <Line yAxisId="left" type="monotone" dataKey="returns" stroke="hsl(var(--destructive))" name="Returns" />
+              <Line
+                yAxisId="right"
+                type="monotone"
+                dataKey="shipped"
+                stroke="hsl(var(--primary))"
+                name="Shipped"
+              />
+              <Line
+                yAxisId="left"
+                type="monotone"
+                dataKey="returns"
+                stroke="hsl(var(--destructive))"
+                name="Returns"
+              />
             </LineChart>
           </ResponsiveContainer>
         </ChartCard>
@@ -272,7 +350,13 @@ export default function QualityControl() {
                 label: "Priority",
                 render: (item) => (
                   <StatusBadge
-                    status={item.priority === "high" ? "danger" : item.priority === "medium" ? "warning" : "neutral"}
+                    status={
+                      item.priority === "high"
+                        ? "danger"
+                        : item.priority === "medium"
+                        ? "warning"
+                        : "neutral"
+                    }
                   >
                     {item.priority}
                   </StatusBadge>
@@ -286,7 +370,10 @@ export default function QualityControl() {
       </div>
 
       {/* Inspection Results */}
-      <ChartCard title="Recent Inspection Results" subtitle="Batch-wise quality metrics">
+      <ChartCard
+        title="Recent Inspection Results"
+        subtitle="Batch-wise quality metrics"
+      >
         <DataTable
           columns={[
             { key: "batch", label: "Batch" },
@@ -294,12 +381,18 @@ export default function QualityControl() {
             {
               key: "passed",
               label: "Passed",
-              render: (item) => <span className="text-success font-medium">{item.passed}</span>,
+              render: (item) => (
+                <span className="text-success font-medium">{item.passed}</span>
+              ),
             },
             {
               key: "failed",
               label: "Failed",
-              render: (item) => <span className="text-destructive font-medium">{item.failed}</span>,
+              render: (item) => (
+                <span className="text-destructive font-medium">
+                  {item.failed}
+                </span>
+              ),
             },
             {
               key: "passRate",
@@ -307,7 +400,15 @@ export default function QualityControl() {
               render: (item) => {
                 const rate = ((item.passed / item.total) * 100).toFixed(1);
                 return (
-                  <StatusBadge status={Number(rate) >= 97 ? "success" : Number(rate) >= 95 ? "warning" : "danger"}>
+                  <StatusBadge
+                    status={
+                      Number(rate) >= 97
+                        ? "success"
+                        : Number(rate) >= 95
+                        ? "warning"
+                        : "danger"
+                    }
+                  >
                     {rate}%
                   </StatusBadge>
                 );

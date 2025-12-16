@@ -59,12 +59,19 @@ const pendingApprovals = [
 export default function DesignCAD() {
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div>
-        <h1 className="page-header">Phase 3: Design & CAD/CAM</h1>
-        <p className="text-muted-foreground">
-          Track design-to-print efficiency and workflow
+      {/* Header */}     
+
+      <div className="flex flex-col items-center text-center space-y-3">
+        <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+          Design & CAD/CAM
+        </h1>
+
+        <p className="max-w-xl text-sm sm:text-base text-muted-foreground">
+          Track design-to-print efficiency and workflow{" "}
         </p>
+
+        {/* Decorative divider */}
+        <div className="mt-2 h-1 w-14 rounded-full bg-primary/60" />
       </div>
 
       {/* KPI Cards */}
@@ -109,12 +116,24 @@ export default function DesignCAD() {
 
       {/* CAD Performance & Printer Utilization */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <ChartCard title="CAD Cycle Time by Designer" subtitle="Average hours per design">
+        <ChartCard
+          title="CAD Cycle Time by Designer"
+          subtitle="Average hours per design"
+        >
           <ResponsiveContainer width="100%" height={280}>
             <BarChart data={cadCycleTime} layout="vertical">
-              <CartesianGrid strokeDasharray="3 3" className="stroke-muted" horizontal={false} />
+              <CartesianGrid
+                strokeDasharray="3 3"
+                className="stroke-muted"
+                horizontal={false}
+              />
               <XAxis type="number" className="text-xs" domain={[0, 4]} />
-              <YAxis dataKey="designer" type="category" className="text-xs" width={60} />
+              <YAxis
+                dataKey="designer"
+                type="category"
+                className="text-xs"
+                width={60}
+              />
               <Tooltip
                 contentStyle={{
                   backgroundColor: "hsl(var(--card))",
@@ -123,7 +142,11 @@ export default function DesignCAD() {
                 }}
                 formatter={(value: number) => [`${value} hrs`, "Avg Time"]}
               />
-              <Bar dataKey="avgTime" fill="hsl(var(--primary))" radius={[0, 4, 4, 0]} />
+              <Bar
+                dataKey="avgTime"
+                fill="hsl(var(--primary))"
+                radius={[0, 4, 4, 0]}
+              />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>
@@ -135,7 +158,13 @@ export default function DesignCAD() {
                 <div className="flex justify-between items-start mb-2">
                   <span className="font-medium text-sm">{printer.printer}</span>
                   <StatusBadge
-                    status={printer.utilization >= 85 ? "success" : printer.utilization >= 70 ? "warning" : "danger"}
+                    status={
+                      printer.utilization >= 85
+                        ? "success"
+                        : printer.utilization >= 70
+                        ? "warning"
+                        : "danger"
+                    }
                   >
                     {printer.utilization}%
                   </StatusBadge>
@@ -164,7 +193,10 @@ export default function DesignCAD() {
 
       {/* Print Failures & Approval Trend */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <ChartCard title="Print Failure Analysis" subtitle="Root cause breakdown">
+        <ChartCard
+          title="Print Failure Analysis"
+          subtitle="Root cause breakdown"
+        >
           <div className="flex items-center gap-6">
             <ResponsiveContainer width="50%" height={220}>
               <PieChart>
@@ -192,14 +224,19 @@ export default function DesignCAD() {
                     style={{ backgroundColor: item.color }}
                   />
                   <span className="text-sm">{item.name}</span>
-                  <span className="text-sm font-semibold ml-auto">{item.value}%</span>
+                  <span className="text-sm font-semibold ml-auto">
+                    {item.value}%
+                  </span>
                 </div>
               ))}
             </div>
           </div>
         </ChartCard>
 
-        <ChartCard title="Design Approval Trend" subtitle="Weekly submission & approval rate">
+        <ChartCard
+          title="Design Approval Trend"
+          subtitle="Weekly submission & approval rate"
+        >
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={approvalTrend}>
               <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
@@ -213,15 +250,28 @@ export default function DesignCAD() {
                 }}
               />
               <Legend />
-              <Bar dataKey="approved" fill="hsl(var(--success))" name="Approved" stackId="a" />
-              <Bar dataKey="rejected" fill="hsl(var(--destructive))" name="Rejected" stackId="a" />
+              <Bar
+                dataKey="approved"
+                fill="hsl(var(--success))"
+                name="Approved"
+                stackId="a"
+              />
+              <Bar
+                dataKey="rejected"
+                fill="hsl(var(--destructive))"
+                name="Rejected"
+                stackId="a"
+              />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>
       </div>
 
       {/* Pending Approvals Table */}
-      <ChartCard title="Pending Design Approvals" subtitle="Designs awaiting review">
+      <ChartCard
+        title="Pending Design Approvals"
+        subtitle="Designs awaiting review"
+      >
         <DataTable
           columns={[
             { key: "id", label: "ID" },
@@ -233,7 +283,13 @@ export default function DesignCAD() {
               label: "Priority",
               render: (item) => (
                 <StatusBadge
-                  status={item.priority === "high" ? "danger" : item.priority === "medium" ? "warning" : "neutral"}
+                  status={
+                    item.priority === "high"
+                      ? "danger"
+                      : item.priority === "medium"
+                      ? "warning"
+                      : "neutral"
+                  }
                 >
                   {item.priority}
                 </StatusBadge>

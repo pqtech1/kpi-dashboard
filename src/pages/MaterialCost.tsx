@@ -60,11 +60,18 @@ export default function MaterialCost() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="page-header">Phase 2: Material & Cost Tracking</h1>
-        <p className="text-muted-foreground">
-          Monitor costs, wastage, and resource consumption
+      
+      <div className="flex flex-col items-center text-center space-y-3">
+        <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+          Material & Cost Tracking
+        </h1>
+
+        <p className="max-w-xl text-sm sm:text-base text-muted-foreground">
+          Monitor costs, wastage, and resource consumption{" "}
         </p>
+
+        {/* Decorative divider */}
+        <div className="mt-2 h-1 w-14 rounded-full bg-primary/60" />
       </div>
 
       {/* KPI Cards */}
@@ -107,7 +114,10 @@ export default function MaterialCost() {
 
       {/* Cost Trends */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <ChartCard title="Cost Trend Analysis" subtitle="Cost per gram & per piece over time">
+        <ChartCard
+          title="Cost Trend Analysis"
+          subtitle="Cost per gram & per piece over time"
+        >
           <ResponsiveContainer width="100%" height={280}>
             <LineChart data={costTrend}>
               <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
@@ -142,7 +152,10 @@ export default function MaterialCost() {
           </ResponsiveContainer>
         </ChartCard>
 
-        <ChartCard title="Energy Consumption by Shift" subtitle="Electricity, Gas & Water usage">
+        <ChartCard
+          title="Energy Consumption by Shift"
+          subtitle="Electricity, Gas & Water usage"
+        >
           <ResponsiveContainer width="100%" height={280}>
             <BarChart data={energyConsumption}>
               <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
@@ -156,9 +169,21 @@ export default function MaterialCost() {
                 }}
               />
               <Legend />
-              <Bar dataKey="electricity" fill="hsl(var(--warning))" name="Electricity (kWh)" />
-              <Bar dataKey="gas" fill="hsl(var(--primary))" name="Gas (units)" />
-              <Bar dataKey="water" fill="hsl(var(--chart-6))" name="Water (L)" />
+              <Bar
+                dataKey="electricity"
+                fill="hsl(var(--warning))"
+                name="Electricity (kWh)"
+              />
+              <Bar
+                dataKey="gas"
+                fill="hsl(var(--primary))"
+                name="Gas (units)"
+              />
+              <Bar
+                dataKey="water"
+                fill="hsl(var(--chart-6))"
+                name="Water (L)"
+              />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>
@@ -166,7 +191,10 @@ export default function MaterialCost() {
 
       {/* Wax Rejection & Resin */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <ChartCard title="Wax Rejection Analysis" subtitle="Rejection reasons breakdown">
+        <ChartCard
+          title="Wax Rejection Analysis"
+          subtitle="Rejection reasons breakdown"
+        >
           <div className="flex items-center gap-6">
             <ResponsiveContainer width="50%" height={220}>
               <PieChart>
@@ -194,17 +222,24 @@ export default function MaterialCost() {
                     style={{ backgroundColor: item.color }}
                   />
                   <span className="text-sm">{item.name}</span>
-                  <span className="text-sm font-semibold ml-auto">{item.value}%</span>
+                  <span className="text-sm font-semibold ml-auto">
+                    {item.value}%
+                  </span>
                 </div>
               ))}
               <div className="pt-2 border-t">
-                <p className="text-xs text-muted-foreground">Total Rejections: 127 units</p>
+                <p className="text-xs text-muted-foreground">
+                  Total Rejections: 127 units
+                </p>
               </div>
             </div>
           </div>
         </ChartCard>
 
-        <ChartCard title="Resin Consumption" subtitle="Standard vs Actual usage">
+        <ChartCard
+          title="Resin Consumption"
+          subtitle="Standard vs Actual usage"
+        >
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={resinConsumption}>
               <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
@@ -218,15 +253,26 @@ export default function MaterialCost() {
                 }}
               />
               <Legend />
-              <Bar dataKey="standard" fill="hsl(var(--muted-foreground))" name="Standard (L)" />
-              <Bar dataKey="actual" fill="hsl(var(--primary))" name="Actual (L)" />
+              <Bar
+                dataKey="standard"
+                fill="hsl(var(--muted-foreground))"
+                name="Standard (L)"
+              />
+              <Bar
+                dataKey="actual"
+                fill="hsl(var(--primary))"
+                name="Actual (L)"
+              />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>
       </div>
 
       {/* Material Usage Table */}
-      <ChartCard title="Material Usage Summary" subtitle="Allocation vs Actual consumption">
+      <ChartCard
+        title="Material Usage Summary"
+        subtitle="Allocation vs Actual consumption"
+      >
         <DataTable
           columns={[
             { key: "material", label: "Material" },
@@ -262,7 +308,11 @@ export default function MaterialCost() {
                       : "danger"
                   }
                 >
-                  {item.status === "normal" ? "Within Limit" : item.status === "warning" ? "Review" : "High"}
+                  {item.status === "normal"
+                    ? "Within Limit"
+                    : item.status === "warning"
+                    ? "Review"
+                    : "High"}
                 </StatusBadge>
               ),
             },

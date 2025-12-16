@@ -2,7 +2,14 @@ import { KPICard } from "@/components/shared/KPICard";
 import { ChartCard } from "@/components/shared/ChartCard";
 import { DataTable } from "@/components/shared/DataTable";
 import { StatusBadge } from "@/components/shared/StatusBadge";
-import { Sparkles, TrendingUp, RefreshCw, Users, Clock, Scale } from "lucide-react";
+import {
+  Sparkles,
+  TrendingUp,
+  RefreshCw,
+  Users,
+  Clock,
+  Scale,
+} from "lucide-react";
 import {
   BarChart,
   Bar,
@@ -49,11 +56,41 @@ const reworkReasons = [
 ];
 
 const operatorPerformance = [
-  { operator: "Ravi K.", completed: 125, rework: 3, efficiency: 96, idleTime: 15 },
-  { operator: "Sanjay M.", completed: 118, rework: 5, efficiency: 92, idleTime: 22 },
-  { operator: "Deepa R.", completed: 132, rework: 2, efficiency: 98, idleTime: 12 },
-  { operator: "Arjun S.", completed: 115, rework: 6, efficiency: 89, idleTime: 28 },
-  { operator: "Meera P.", completed: 128, rework: 4, efficiency: 94, idleTime: 18 },
+  {
+    operator: "Ravi K.",
+    completed: 125,
+    rework: 3,
+    efficiency: 96,
+    idleTime: 15,
+  },
+  {
+    operator: "Sanjay M.",
+    completed: 118,
+    rework: 5,
+    efficiency: 92,
+    idleTime: 22,
+  },
+  {
+    operator: "Deepa R.",
+    completed: 132,
+    rework: 2,
+    efficiency: 98,
+    idleTime: 12,
+  },
+  {
+    operator: "Arjun S.",
+    completed: 115,
+    rework: 6,
+    efficiency: 89,
+    idleTime: 28,
+  },
+  {
+    operator: "Meera P.",
+    completed: 128,
+    rework: 4,
+    efficiency: 94,
+    idleTime: 18,
+  },
 ];
 
 const idleTimeBreakdown = [
@@ -68,11 +105,18 @@ export default function Finishing() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="page-header">Phase 5: Finishing Module</h1>
-        <p className="text-muted-foreground">
-          Track productivity and losses during finishing operations
+
+      <div className="flex flex-col items-center text-center space-y-3">
+        <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+          Finishing Module
+        </h1>
+
+        <p className="max-w-xl text-sm sm:text-base text-muted-foreground">
+          Track productivity and losses during finishing operations{" "}
         </p>
+
+        {/* Decorative divider */}
+        <div className="mt-2 h-1 w-14 rounded-full bg-primary/60" />
       </div>
 
       {/* KPI Cards */}
@@ -126,7 +170,10 @@ export default function Finishing() {
 
       {/* Throughput & Polishing Loss */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <ChartCard title="Hourly Throughput" subtitle="Output vs target by hour">
+        <ChartCard
+          title="Hourly Throughput"
+          subtitle="Output vs target by hour"
+        >
           <ResponsiveContainer width="100%" height={280}>
             <AreaChart data={throughputData}>
               <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
@@ -159,7 +206,10 @@ export default function Finishing() {
           </ResponsiveContainer>
         </ChartCard>
 
-        <ChartCard title="Polishing Loss by Process" subtitle="Material loss at each stage">
+        <ChartCard
+          title="Polishing Loss by Process"
+          subtitle="Material loss at each stage"
+        >
           <ResponsiveContainer width="100%" height={280}>
             <BarChart data={polishingLoss}>
               <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
@@ -173,8 +223,16 @@ export default function Finishing() {
                 }}
               />
               <Legend />
-              <Bar dataKey="input" fill="hsl(var(--muted-foreground))" name="Input %" />
-              <Bar dataKey="output" fill="hsl(var(--primary))" name="Output %" />
+              <Bar
+                dataKey="input"
+                fill="hsl(var(--muted-foreground))"
+                name="Input %"
+              />
+              <Bar
+                dataKey="output"
+                fill="hsl(var(--primary))"
+                name="Output %"
+              />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>
@@ -210,22 +268,38 @@ export default function Finishing() {
                     style={{ backgroundColor: item.color }}
                   />
                   <span className="text-sm">{item.name}</span>
-                  <span className="text-sm font-semibold ml-auto">{item.value}%</span>
+                  <span className="text-sm font-semibold ml-auto">
+                    {item.value}%
+                  </span>
                 </div>
               ))}
               <div className="pt-2 border-t">
-                <p className="text-xs text-muted-foreground">Total Rework: 20 pieces</p>
+                <p className="text-xs text-muted-foreground">
+                  Total Rework: 20 pieces
+                </p>
               </div>
             </div>
           </div>
         </ChartCard>
 
-        <ChartCard title="Idle Time Breakdown" subtitle="Non-productive time by reason">
+        <ChartCard
+          title="Idle Time Breakdown"
+          subtitle="Non-productive time by reason"
+        >
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={idleTimeBreakdown} layout="vertical">
-              <CartesianGrid strokeDasharray="3 3" className="stroke-muted" horizontal={false} />
+              <CartesianGrid
+                strokeDasharray="3 3"
+                className="stroke-muted"
+                horizontal={false}
+              />
               <XAxis type="number" className="text-xs" />
-              <YAxis dataKey="reason" type="category" className="text-xs" width={90} />
+              <YAxis
+                dataKey="reason"
+                type="category"
+                className="text-xs"
+                width={90}
+              />
               <Tooltip
                 contentStyle={{
                   backgroundColor: "hsl(var(--card))",
@@ -234,14 +308,21 @@ export default function Finishing() {
                 }}
                 formatter={(value: number) => [`${value} min`, "Duration"]}
               />
-              <Bar dataKey="minutes" fill="hsl(var(--warning))" radius={[0, 4, 4, 0]} />
+              <Bar
+                dataKey="minutes"
+                fill="hsl(var(--warning))"
+                radius={[0, 4, 4, 0]}
+              />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>
       </div>
 
       {/* Operator Performance Table */}
-      <ChartCard title="Operator Productivity" subtitle="Individual performance metrics">
+      <ChartCard
+        title="Operator Productivity"
+        subtitle="Individual performance metrics"
+      >
         <DataTable
           columns={[
             { key: "operator", label: "Operator" },
@@ -250,7 +331,11 @@ export default function Finishing() {
               key: "rework",
               label: "Rework",
               render: (item) => (
-                <span className={item.rework > 4 ? "text-destructive font-medium" : ""}>
+                <span
+                  className={
+                    item.rework > 4 ? "text-destructive font-medium" : ""
+                  }
+                >
                   {item.rework}
                 </span>
               ),
@@ -272,7 +357,9 @@ export default function Finishing() {
                       style={{ width: `${item.efficiency}%` }}
                     />
                   </div>
-                  <span className="text-sm font-medium">{item.efficiency}%</span>
+                  <span className="text-sm font-medium">
+                    {item.efficiency}%
+                  </span>
                 </div>
               ),
             },
@@ -280,7 +367,11 @@ export default function Finishing() {
               key: "idleTime",
               label: "Idle Time",
               render: (item) => (
-                <span className={item.idleTime > 20 ? "text-warning font-medium" : ""}>
+                <span
+                  className={
+                    item.idleTime > 20 ? "text-warning font-medium" : ""
+                  }
+                >
                   {item.idleTime} min
                 </span>
               ),
@@ -290,9 +381,19 @@ export default function Finishing() {
               label: "Status",
               render: (item) => (
                 <StatusBadge
-                  status={item.efficiency >= 95 ? "success" : item.efficiency >= 90 ? "warning" : "danger"}
+                  status={
+                    item.efficiency >= 95
+                      ? "success"
+                      : item.efficiency >= 90
+                      ? "warning"
+                      : "danger"
+                  }
                 >
-                  {item.efficiency >= 95 ? "Excellent" : item.efficiency >= 90 ? "Good" : "Needs Review"}
+                  {item.efficiency >= 95
+                    ? "Excellent"
+                    : item.efficiency >= 90
+                    ? "Good"
+                    : "Needs Review"}
                 </StatusBadge>
               ),
             },

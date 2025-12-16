@@ -78,8 +78,8 @@ export function Sidebar() {
       {/* Logo */}
       <div className="h-16 flex items-center justify-between px-4 border-b border-sidebar-border">
         {!collapsed && (
-          <span className="text-xl font-bold text-sidebar-foreground">
-            ManuFlow
+          <span className="text-xl font-bold text-sidebar-foreground drop-shadow-[0_0_6px_rgba(255,215,0,0.6)]">
+            💎 Jewel Integra
           </span>
         )}
         <button
@@ -98,10 +98,7 @@ export function Sidebar() {
             <NavLink
               key={item.path}
               to={item.path}
-              className={cn(
-                "sidebar-item",
-                isActive && "sidebar-item-active"
-              )}
+              className={cn("sidebar-item", isActive && "sidebar-item-active")}
               title={collapsed ? item.title : undefined}
             >
               <item.icon size={20} />

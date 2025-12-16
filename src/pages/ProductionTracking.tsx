@@ -58,22 +58,59 @@ const wipData = [
 ];
 
 const lineStatus = [
-  { line: "Line A", status: "Running", output: 245, efficiency: 94, operator: "John D." },
-  { line: "Line B", status: "Running", output: 232, efficiency: 89, operator: "Sarah M." },
-  { line: "Line C", status: "Idle", output: 180, efficiency: 72, operator: "Mike R." },
-  { line: "Line D", status: "Running", output: 258, efficiency: 97, operator: "Lisa K." },
-  { line: "Line E", status: "Maintenance", output: 0, efficiency: 0, operator: "Tom W." },
+  {
+    line: "Line A",
+    status: "Running",
+    output: 245,
+    efficiency: 94,
+    operator: "John D.",
+  },
+  {
+    line: "Line B",
+    status: "Running",
+    output: 232,
+    efficiency: 89,
+    operator: "Sarah M.",
+  },
+  {
+    line: "Line C",
+    status: "Idle",
+    output: 180,
+    efficiency: 72,
+    operator: "Mike R.",
+  },
+  {
+    line: "Line D",
+    status: "Running",
+    output: 258,
+    efficiency: 97,
+    operator: "Lisa K.",
+  },
+  {
+    line: "Line E",
+    status: "Maintenance",
+    output: 0,
+    efficiency: 0,
+    operator: "Tom W.",
+  },
 ];
 
 export default function ProductionTracking() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="page-header">Phase 1: Production Tracking</h1>
-        <p className="text-muted-foreground">
+      <div className="flex flex-col items-center text-center space-y-3">       
+
+        <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+          Production Tracking
+        </h1>
+
+        <p className="max-w-xl text-sm sm:text-base text-muted-foreground">
           Core production metrics and efficiency tracking
         </p>
+
+        {/* Decorative divider */}
+        <div className="mt-2 h-1 w-14 rounded-full bg-primary/60" />
       </div>
 
       {/* KPI Cards */}
@@ -159,25 +196,38 @@ export default function ProductionTracking() {
             <GaugeChart value={84} label="Overall OEE" size="lg" />
             <div className="space-y-3">
               <div className="flex justify-between items-center">
-                <span className="text-sm text-muted-foreground">Availability</span>
+                <span className="text-sm text-muted-foreground">
+                  Availability
+                </span>
                 <span className="font-semibold text-success">92%</span>
               </div>
               <div className="h-2 bg-muted rounded-full overflow-hidden">
-                <div className="h-full bg-success rounded-full" style={{ width: "92%" }} />
+                <div
+                  className="h-full bg-success rounded-full"
+                  style={{ width: "92%" }}
+                />
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-muted-foreground">Performance</span>
+                <span className="text-sm text-muted-foreground">
+                  Performance
+                </span>
                 <span className="font-semibold text-primary">88%</span>
               </div>
               <div className="h-2 bg-muted rounded-full overflow-hidden">
-                <div className="h-full bg-primary rounded-full" style={{ width: "88%" }} />
+                <div
+                  className="h-full bg-primary rounded-full"
+                  style={{ width: "88%" }}
+                />
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm text-muted-foreground">Quality</span>
                 <span className="font-semibold text-success">97%</span>
               </div>
               <div className="h-2 bg-muted rounded-full overflow-hidden">
-                <div className="h-full bg-success rounded-full" style={{ width: "97%" }} />
+                <div
+                  className="h-full bg-success rounded-full"
+                  style={{ width: "97%" }}
+                />
               </div>
             </div>
           </div>
@@ -186,7 +236,10 @@ export default function ProductionTracking() {
 
       {/* Downtime & WIP */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <ChartCard title="Downtime Analysis" subtitle="System vs Manual downtime breakdown">
+        <ChartCard
+          title="Downtime Analysis"
+          subtitle="System vs Manual downtime breakdown"
+        >
           <div className="flex items-center gap-6">
             <ResponsiveContainer width="50%" height={200}>
               <PieChart>
@@ -214,14 +267,19 @@ export default function ProductionTracking() {
                     style={{ backgroundColor: item.color }}
                   />
                   <span className="text-sm">{item.name}</span>
-                  <span className="text-sm font-semibold ml-auto">{item.value}%</span>
+                  <span className="text-sm font-semibold ml-auto">
+                    {item.value}%
+                  </span>
                 </div>
               ))}
             </div>
           </div>
         </ChartCard>
 
-        <ChartCard title="WIP Turnaround Time" subtitle="Work-in-progress by stage">
+        <ChartCard
+          title="WIP Turnaround Time"
+          subtitle="Work-in-progress by stage"
+        >
           <div className="space-y-3">
             {wipData.map((item) => (
               <div
@@ -230,7 +288,9 @@ export default function ProductionTracking() {
               >
                 <div>
                   <p className="font-medium text-sm">{item.stage}</p>
-                  <p className="text-xs text-muted-foreground">Avg TAT: {item.time}</p>
+                  <p className="text-xs text-muted-foreground">
+                    Avg TAT: {item.time}
+                  </p>
                 </div>
                 <div className="text-right">
                   <p className="text-lg font-bold">{item.count}</p>
@@ -243,7 +303,10 @@ export default function ProductionTracking() {
       </div>
 
       {/* Line Status Table */}
-      <ChartCard title="Production Line Status" subtitle="Real-time line performance">
+      <ChartCard
+        title="Production Line Status"
+        subtitle="Real-time line performance"
+      >
         <DataTable
           columns={[
             { key: "line", label: "Line" },
@@ -252,9 +315,15 @@ export default function ProductionTracking() {
               label: "Status",
               render: (item) => (
                 <div className="flex items-center gap-2">
-                  {item.status === "Running" && <Play className="h-3 w-3 text-success" />}
-                  {item.status === "Idle" && <Pause className="h-3 w-3 text-warning" />}
-                  {item.status === "Maintenance" && <AlertTriangle className="h-3 w-3 text-destructive" />}
+                  {item.status === "Running" && (
+                    <Play className="h-3 w-3 text-success" />
+                  )}
+                  {item.status === "Idle" && (
+                    <Pause className="h-3 w-3 text-warning" />
+                  )}
+                  {item.status === "Maintenance" && (
+                    <AlertTriangle className="h-3 w-3 text-destructive" />
+                  )}
                   <StatusBadge
                     status={
                       item.status === "Running"

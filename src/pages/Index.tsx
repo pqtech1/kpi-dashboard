@@ -13,13 +13,19 @@ const Index = () => {
 
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         {/* Page Title */}
-        <div className="mb-6 sm:mb-8">
-          <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">
-            Phase 1: Core Production Tracking
-          </h2>
-          <p className="text-muted-foreground">
-            Capture production and efficiency metrics - the foundation for all performance tracking
+
+        <div className="flex flex-col items-center text-center space-y-3">
+          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+            Core Production Tracking
+          </h1>
+
+          <p className="max-w-xl text-sm sm:text-base text-muted-foreground">
+            Capture production and efficiency metrics - the foundation for all
+            performance tracking{" "}
           </p>
+
+          {/* Decorative divider */}
+          <div className="mt-2 h-1 w-14 rounded-full bg-primary/60" />
         </div>
 
         {/* KPI Cards Grid */}
@@ -103,7 +109,9 @@ const Index = () => {
             </div>
             <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-accent/10 border border-accent/20">
               <Zap className="h-4 w-4 text-accent" />
-              <span className="text-sm font-medium text-accent">Next: Yield Analysis Module</span>
+              <span className="text-sm font-medium text-accent">
+                Next: Yield Analysis Module
+              </span>
             </div>
           </div>
         </div>

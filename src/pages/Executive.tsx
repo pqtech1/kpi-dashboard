@@ -2,7 +2,14 @@ import { KPICard } from "@/components/shared/KPICard";
 import { ChartCard } from "@/components/shared/ChartCard";
 import { DataTable } from "@/components/shared/DataTable";
 import { StatusBadge } from "@/components/shared/StatusBadge";
-import { TrendingUp, DollarSign, Percent, Activity, Package, AlertTriangle } from "lucide-react";
+import {
+  TrendingUp,
+  DollarSign,
+  Percent,
+  Activity,
+  Package,
+  AlertTriangle,
+} from "lucide-react";
 import {
   BarChart,
   Bar,
@@ -56,11 +63,46 @@ const capacityHeatmap = [
 ];
 
 const liveOrders = [
-  { orderId: "ORD-5621", customer: "ABC Jewelers", items: 250, value: "₹8,50,000", status: "In Production", eta: "2 days" },
-  { orderId: "ORD-5622", customer: "Gold Palace", items: 180, value: "₹6,20,000", status: "QC Pending", eta: "1 day" },
-  { orderId: "ORD-5623", customer: "Diamond House", items: 320, value: "₹12,80,000", status: "Casting", eta: "4 days" },
-  { orderId: "ORD-5624", customer: "Silver Touch", items: 150, value: "₹4,50,000", status: "Finishing", eta: "1 day" },
-  { orderId: "ORD-5625", customer: "Royal Gems", items: 420, value: "₹18,50,000", status: "Design", eta: "6 days" },
+  {
+    orderId: "ORD-5621",
+    customer: "ABC Jewelers",
+    items: 250,
+    value: "₹8,50,000",
+    status: "In Production",
+    eta: "2 days",
+  },
+  {
+    orderId: "ORD-5622",
+    customer: "Gold Palace",
+    items: 180,
+    value: "₹6,20,000",
+    status: "QC Pending",
+    eta: "1 day",
+  },
+  {
+    orderId: "ORD-5623",
+    customer: "Diamond House",
+    items: 320,
+    value: "₹12,80,000",
+    status: "Casting",
+    eta: "4 days",
+  },
+  {
+    orderId: "ORD-5624",
+    customer: "Silver Touch",
+    items: 150,
+    value: "₹4,50,000",
+    status: "Finishing",
+    eta: "1 day",
+  },
+  {
+    orderId: "ORD-5625",
+    customer: "Royal Gems",
+    items: 420,
+    value: "₹18,50,000",
+    status: "Design",
+    eta: "6 days",
+  },
 ];
 
 const getHeatmapColor = (value: number) => {
@@ -74,11 +116,17 @@ export default function Executive() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="page-header">Phase 7: Executive Dashboard</h1>
-        <p className="text-muted-foreground">
-          Top management insights and profitability analysis
+      <div className="flex flex-col items-center text-center space-y-3">
+        <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+          Executive Dashboard
+        </h1>
+
+        <p className="max-w-xl text-sm sm:text-base text-muted-foreground">
+          Top management insights and profitability analysis{" "}
         </p>
+
+        {/* Decorative divider */}
+        <div className="mt-2 h-1 w-14 rounded-full bg-primary/60" />
       </div>
 
       {/* KPI Cards */}
@@ -120,31 +168,53 @@ export default function Executive() {
       </div>
 
       {/* Profit Trend */}
-      <ChartCard title="Profit Analysis" subtitle="Monthly revenue, cost, and profit trend">
+      <ChartCard
+        title="Profit Analysis"
+        subtitle="Monthly revenue, cost, and profit trend"
+      >
         <ResponsiveContainer width="100%" height={320}>
           <ComposedChart data={profitTrend}>
             <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
             <XAxis dataKey="month" className="text-xs" />
-            <YAxis className="text-xs" tickFormatter={(value) => `₹${(value / 100000).toFixed(0)}L`} />
+            <YAxis
+              className="text-xs"
+              tickFormatter={(value) => `₹${(value / 100000).toFixed(0)}L`}
+            />
             <Tooltip
               contentStyle={{
                 backgroundColor: "hsl(var(--card))",
                 border: "1px solid hsl(var(--border))",
                 borderRadius: "8px",
               }}
-              formatter={(value: number) => [`₹${(value / 100000).toFixed(1)}L`, ""]}
+              formatter={(value: number) => [
+                `₹${(value / 100000).toFixed(1)}L`,
+                "",
+              ]}
             />
             <Legend />
             <Bar dataKey="revenue" fill="hsl(var(--primary))" name="Revenue" />
-            <Bar dataKey="cost" fill="hsl(var(--muted-foreground))" name="Cost" />
-            <Line type="monotone" dataKey="profit" stroke="hsl(var(--success))" strokeWidth={3} name="Profit" />
+            <Bar
+              dataKey="cost"
+              fill="hsl(var(--muted-foreground))"
+              name="Cost"
+            />
+            <Line
+              type="monotone"
+              dataKey="profit"
+              stroke="hsl(var(--success))"
+              strokeWidth={3}
+              name="Profit"
+            />
           </ComposedChart>
         </ResponsiveContainer>
       </ChartCard>
 
       {/* Contribution Margin & Bottleneck */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <ChartCard title="Contribution Margin by Product" subtitle="Margin % and volume">
+        <ChartCard
+          title="Contribution Margin by Product"
+          subtitle="Margin % and volume"
+        >
           <ResponsiveContainer width="100%" height={280}>
             <BarChart data={contributionMargin}>
               <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
@@ -159,18 +229,41 @@ export default function Executive() {
                 }}
               />
               <Legend />
-              <Bar yAxisId="left" dataKey="margin" fill="hsl(var(--success))" name="Margin %" />
-              <Line yAxisId="right" type="monotone" dataKey="volume" stroke="hsl(var(--primary))" name="Volume" />
+              <Bar
+                yAxisId="left"
+                dataKey="margin"
+                fill="hsl(var(--success))"
+                name="Margin %"
+              />
+              <Line
+                yAxisId="right"
+                type="monotone"
+                dataKey="volume"
+                stroke="hsl(var(--primary))"
+                name="Volume"
+              />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>
 
-        <ChartCard title="Bottleneck Index" subtitle="Process wait time and utilization">
+        <ChartCard
+          title="Bottleneck Index"
+          subtitle="Process wait time and utilization"
+        >
           <ResponsiveContainer width="100%" height={280}>
             <BarChart data={bottleneckData} layout="vertical">
-              <CartesianGrid strokeDasharray="3 3" className="stroke-muted" horizontal={false} />
+              <CartesianGrid
+                strokeDasharray="3 3"
+                className="stroke-muted"
+                horizontal={false}
+              />
               <XAxis type="number" className="text-xs" />
-              <YAxis dataKey="process" type="category" className="text-xs" width={70} />
+              <YAxis
+                dataKey="process"
+                type="category"
+                className="text-xs"
+                width={70}
+              />
               <Tooltip
                 contentStyle={{
                   backgroundColor: "hsl(var(--card))",
@@ -179,53 +272,98 @@ export default function Executive() {
                 }}
               />
               <Legend />
-              <Bar dataKey="waitTime" fill="hsl(var(--warning))" name="Wait Time (min)" />
-              <Bar dataKey="utilization" fill="hsl(var(--primary))" name="Utilization %" />
+              <Bar
+                dataKey="waitTime"
+                fill="hsl(var(--warning))"
+                name="Wait Time (min)"
+              />
+              <Bar
+                dataKey="utilization"
+                fill="hsl(var(--primary))"
+                name="Utilization %"
+              />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>
       </div>
 
       {/* Capacity Heatmap */}
-      <ChartCard title="Capacity Heatmap" subtitle="Resource utilization by day (%)">
+      <ChartCard
+        title="Capacity Heatmap"
+        subtitle="Resource utilization by day (%)"
+      >
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b">
-                <th className="text-left py-2 px-3 text-sm font-medium text-muted-foreground">Resource</th>
-                <th className="text-center py-2 px-3 text-sm font-medium text-muted-foreground">Mon</th>
-                <th className="text-center py-2 px-3 text-sm font-medium text-muted-foreground">Tue</th>
-                <th className="text-center py-2 px-3 text-sm font-medium text-muted-foreground">Wed</th>
-                <th className="text-center py-2 px-3 text-sm font-medium text-muted-foreground">Thu</th>
-                <th className="text-center py-2 px-3 text-sm font-medium text-muted-foreground">Fri</th>
+                <th className="text-left py-2 px-3 text-sm font-medium text-muted-foreground">
+                  Resource
+                </th>
+                <th className="text-center py-2 px-3 text-sm font-medium text-muted-foreground">
+                  Mon
+                </th>
+                <th className="text-center py-2 px-3 text-sm font-medium text-muted-foreground">
+                  Tue
+                </th>
+                <th className="text-center py-2 px-3 text-sm font-medium text-muted-foreground">
+                  Wed
+                </th>
+                <th className="text-center py-2 px-3 text-sm font-medium text-muted-foreground">
+                  Thu
+                </th>
+                <th className="text-center py-2 px-3 text-sm font-medium text-muted-foreground">
+                  Fri
+                </th>
               </tr>
             </thead>
             <tbody>
               {capacityHeatmap.map((row) => (
                 <tr key={row.resource} className="border-b">
-                  <td className="py-2 px-3 text-sm font-medium">{row.resource}</td>
+                  <td className="py-2 px-3 text-sm font-medium">
+                    {row.resource}
+                  </td>
                   <td className="py-2 px-3 text-center">
-                    <span className={`inline-block px-2 py-1 rounded text-xs font-medium ${getHeatmapColor(row.mon)}`}>
+                    <span
+                      className={`inline-block px-2 py-1 rounded text-xs font-medium ${getHeatmapColor(
+                        row.mon
+                      )}`}
+                    >
                       {row.mon}%
                     </span>
                   </td>
                   <td className="py-2 px-3 text-center">
-                    <span className={`inline-block px-2 py-1 rounded text-xs font-medium ${getHeatmapColor(row.tue)}`}>
+                    <span
+                      className={`inline-block px-2 py-1 rounded text-xs font-medium ${getHeatmapColor(
+                        row.tue
+                      )}`}
+                    >
                       {row.tue}%
                     </span>
                   </td>
                   <td className="py-2 px-3 text-center">
-                    <span className={`inline-block px-2 py-1 rounded text-xs font-medium ${getHeatmapColor(row.wed)}`}>
+                    <span
+                      className={`inline-block px-2 py-1 rounded text-xs font-medium ${getHeatmapColor(
+                        row.wed
+                      )}`}
+                    >
                       {row.wed}%
                     </span>
                   </td>
                   <td className="py-2 px-3 text-center">
-                    <span className={`inline-block px-2 py-1 rounded text-xs font-medium ${getHeatmapColor(row.thu)}`}>
+                    <span
+                      className={`inline-block px-2 py-1 rounded text-xs font-medium ${getHeatmapColor(
+                        row.thu
+                      )}`}
+                    >
                       {row.thu}%
                     </span>
                   </td>
                   <td className="py-2 px-3 text-center">
-                    <span className={`inline-block px-2 py-1 rounded text-xs font-medium ${getHeatmapColor(row.fri)}`}>
+                    <span
+                      className={`inline-block px-2 py-1 rounded text-xs font-medium ${getHeatmapColor(
+                        row.fri
+                      )}`}
+                    >
                       {row.fri}%
                     </span>
                   </td>
@@ -252,7 +390,8 @@ export default function Executive() {
                   status={
                     item.status === "QC Pending" || item.status === "Finishing"
                       ? "warning"
-                      : item.status === "In Production" || item.status === "Casting"
+                      : item.status === "In Production" ||
+                        item.status === "Casting"
                       ? "info"
                       : "neutral"
                   }
@@ -265,7 +404,11 @@ export default function Executive() {
               key: "eta",
               label: "ETA",
               render: (item) => (
-                <span className={item.eta === "1 day" ? "text-success font-medium" : ""}>
+                <span
+                  className={
+                    item.eta === "1 day" ? "text-success font-medium" : ""
+                  }
+                >
                   {item.eta}
                 </span>
               ),

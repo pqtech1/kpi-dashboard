@@ -44,21 +44,55 @@ const moduleStatus = [
 ];
 
 const recentAlerts = [
-  { id: 1, type: "warning", message: "Machine #3 maintenance due", time: "10 min ago" },
-  { id: 2, type: "danger", message: "Quality threshold breach detected", time: "25 min ago" },
-  { id: 3, type: "info", message: "New batch started on Line A", time: "45 min ago" },
-  { id: 4, type: "success", message: "Daily target achieved for Line B", time: "1 hr ago" },
+  {
+    id: 1,
+    type: "warning",
+    message: "Machine #3 maintenance due",
+    time: "10 min ago",
+  },
+  {
+    id: 2,
+    type: "danger",
+    message: "Quality threshold breach detected",
+    time: "25 min ago",
+  },
+  {
+    id: 3,
+    type: "info",
+    message: "New batch started on Line A",
+    time: "45 min ago",
+  },
+  {
+    id: 4,
+    type: "success",
+    message: "Daily target achieved for Line B",
+    time: "1 hr ago",
+  },
 ];
 
 export default function Overview() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="page-header">Dashboard Overview</h1>
-        <p className="text-muted-foreground">
+      <div className="flex flex-col items-center text-center space-y-3 ">
+        {/* Optional subtle badge */}
+        <span
+          className="px-3 py-1 text-xs font-medium rounded-full 
+                   bg-primary/10 text-primary"
+        >
+          Manufacturing Dashboard
+        </span>
+
+        <h1 className="page-header text-3xl sm:text-4xl font-bold tracking-tight">
+          Dashboard Overview
+        </h1>
+
+        <p className="max-w-xl text-sm sm:text-base text-muted-foreground">
           Real-time manufacturing performance at a glance
         </p>
+
+        {/* Decorative divider */}
+        <div className="mt-2 h-1 w-16 rounded-full bg-primary/60" />
       </div>
 
       {/* Top KPIs */}
@@ -162,9 +196,18 @@ export default function Overview() {
         <ChartCard title="Module Efficiency">
           <ResponsiveContainer width="100%" height={240}>
             <BarChart data={moduleStatus} layout="vertical">
-              <CartesianGrid strokeDasharray="3 3" className="stroke-muted" horizontal={false} />
+              <CartesianGrid
+                strokeDasharray="3 3"
+                className="stroke-muted"
+                horizontal={false}
+              />
               <XAxis type="number" domain={[0, 100]} className="text-xs" />
-              <YAxis dataKey="name" type="category" className="text-xs" width={80} />
+              <YAxis
+                dataKey="name"
+                type="category"
+                className="text-xs"
+                width={80}
+              />
               <Tooltip
                 contentStyle={{
                   backgroundColor: "hsl(var(--card))",

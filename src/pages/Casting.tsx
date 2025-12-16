@@ -66,12 +66,19 @@ export default function Casting() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="page-header">Phase 4: Casting Module</h1>
-        <p className="text-muted-foreground">
+      <div className="flex flex-col items-center text-center space-y-3">
+        <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+          Casting Module
+        </h1>
+
+        <p className="max-w-xl text-sm sm:text-base text-muted-foreground">
           Metal transformation efficiency and material recovery tracking
         </p>
+
+        {/* Decorative divider */}
+        <div className="mt-2 h-1 w-14 rounded-full bg-primary/60" />
       </div>
+      
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
@@ -133,7 +140,10 @@ export default function Casting() {
 
       {/* Yield & Metal Loss */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <ChartCard title="Yield Trend" subtitle="Weekly yield percentage vs target">
+        <ChartCard
+          title="Yield Trend"
+          subtitle="Weekly yield percentage vs target"
+        >
           <ResponsiveContainer width="100%" height={280}>
             <AreaChart data={yieldTrend}>
               <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
@@ -166,7 +176,10 @@ export default function Casting() {
           </ResponsiveContainer>
         </ChartCard>
 
-        <ChartCard title="Metal Loss Breakdown" subtitle="Loss distribution by category">
+        <ChartCard
+          title="Metal Loss Breakdown"
+          subtitle="Loss distribution by category"
+        >
           <div className="flex items-center gap-6">
             <ResponsiveContainer width="50%" height={240}>
               <PieChart>
@@ -194,11 +207,15 @@ export default function Casting() {
                     style={{ backgroundColor: item.color }}
                   />
                   <span className="text-sm">{item.name}</span>
-                  <span className="text-sm font-semibold ml-auto">{item.value}%</span>
+                  <span className="text-sm font-semibold ml-auto">
+                    {item.value}%
+                  </span>
                 </div>
               ))}
               <div className="pt-2 border-t">
-                <p className="text-xs text-muted-foreground">Total Loss: 245g today</p>
+                <p className="text-xs text-muted-foreground">
+                  Total Loss: 245g today
+                </p>
               </div>
             </div>
           </div>
@@ -207,12 +224,24 @@ export default function Casting() {
 
       {/* Defect & Cycle Time */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <ChartCard title="Defect Analysis" subtitle="Defect types and occurrence">
+        <ChartCard
+          title="Defect Analysis"
+          subtitle="Defect types and occurrence"
+        >
           <ResponsiveContainer width="100%" height={240}>
             <BarChart data={defectData} layout="vertical">
-              <CartesianGrid strokeDasharray="3 3" className="stroke-muted" horizontal={false} />
+              <CartesianGrid
+                strokeDasharray="3 3"
+                className="stroke-muted"
+                horizontal={false}
+              />
               <XAxis type="number" className="text-xs" />
-              <YAxis dataKey="type" type="category" className="text-xs" width={100} />
+              <YAxis
+                dataKey="type"
+                type="category"
+                className="text-xs"
+                width={100}
+              />
               <Tooltip
                 contentStyle={{
                   backgroundColor: "hsl(var(--card))",
@@ -224,12 +253,19 @@ export default function Casting() {
                   name === "count" ? "Count" : "Rate",
                 ]}
               />
-              <Bar dataKey="count" fill="hsl(var(--destructive))" radius={[0, 4, 4, 0]} />
+              <Bar
+                dataKey="count"
+                fill="hsl(var(--destructive))"
+                radius={[0, 4, 4, 0]}
+              />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>
 
-        <ChartCard title="Batch Cycle Time" subtitle="Time per batch with output">
+        <ChartCard
+          title="Batch Cycle Time"
+          subtitle="Time per batch with output"
+        >
           <ResponsiveContainer width="100%" height={240}>
             <BarChart data={batchCycleTime}>
               <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
@@ -244,8 +280,19 @@ export default function Casting() {
                 }}
               />
               <Legend />
-              <Bar yAxisId="left" dataKey="cycleTime" fill="hsl(var(--primary))" name="Cycle Time (hrs)" />
-              <Line yAxisId="right" type="monotone" dataKey="pieces" stroke="hsl(var(--success))" name="Pieces" />
+              <Bar
+                yAxisId="left"
+                dataKey="cycleTime"
+                fill="hsl(var(--primary))"
+                name="Cycle Time (hrs)"
+              />
+              <Line
+                yAxisId="right"
+                type="monotone"
+                dataKey="pieces"
+                stroke="hsl(var(--success))"
+                name="Pieces"
+              />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>
@@ -277,7 +324,11 @@ export default function Casting() {
               key: "temp",
               label: "Temperature",
               render: (item) => (
-                <span className={item.temp > 1000 ? "text-destructive font-medium" : ""}>
+                <span
+                  className={
+                    item.temp > 1000 ? "text-destructive font-medium" : ""
+                  }
+                >
                   {item.temp}°C
                 </span>
               ),
