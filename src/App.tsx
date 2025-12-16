@@ -3,7 +3,15 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
+import { DashboardLayout } from "@/components/layout/DashboardLayout";
+import Overview from "./pages/Overview";
+import ProductionTracking from "./pages/ProductionTracking";
+import MaterialCost from "./pages/MaterialCost";
+import DesignCAD from "./pages/DesignCAD";
+import Casting from "./pages/Casting";
+import Finishing from "./pages/Finishing";
+import QualityControl from "./pages/QualityControl";
+import Executive from "./pages/Executive";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -14,11 +22,19 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <DashboardLayout>
+          <Routes>
+            <Route path="/" element={<Overview />} />
+            <Route path="/production" element={<ProductionTracking />} />
+            <Route path="/material-cost" element={<MaterialCost />} />
+            <Route path="/design-cad" element={<DesignCAD />} />
+            <Route path="/casting" element={<Casting />} />
+            <Route path="/finishing" element={<Finishing />} />
+            <Route path="/quality-control" element={<QualityControl />} />
+            <Route path="/executive" element={<Executive />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </DashboardLayout>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
