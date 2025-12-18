@@ -19,6 +19,24 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
+const ProtectedDashboard = () => (
+  <ProtectedRoute>
+    <DashboardLayout>
+      <Routes>
+        <Route path="/" element={<Overview />} />
+        <Route path="/production" element={<ProductionTracking />} />
+        <Route path="/material-cost" element={<MaterialCost />} />
+        <Route path="/design-cad" element={<DesignCAD />} />
+        <Route path="/casting" element={<Casting />} />
+        <Route path="/finishing" element={<Finishing />} />
+        <Route path="/quality-control" element={<QualityControl />} />
+        <Route path="/executive" element={<Executive />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </DashboardLayout>
+  </ProtectedRoute>
+);
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -28,26 +46,7 @@ const App = () => (
         <AuthProvider>
           <Routes>
             <Route path="/login" element={<Login />} />
-            <Route
-              path="/*"
-              element={
-                <ProtectedRoute>
-                  <DashboardLayout>
-                    <Routes>
-                      <Route path="/" element={<Overview />} />
-                      <Route path="/production" element={<ProductionTracking />} />
-                      <Route path="/material-cost" element={<MaterialCost />} />
-                      <Route path="/design-cad" element={<DesignCAD />} />
-                      <Route path="/casting" element={<Casting />} />
-                      <Route path="/finishing" element={<Finishing />} />
-                      <Route path="/quality-control" element={<QualityControl />} />
-                      <Route path="/executive" element={<Executive />} />
-                      <Route path="*" element={<NotFound />} />
-                    </Routes>
-                  </DashboardLayout>
-                </ProtectedRoute>
-              }
-            />
+            <Route path="/*" element={<ProtectedDashboard />} />
           </Routes>
         </AuthProvider>
       </BrowserRouter>
