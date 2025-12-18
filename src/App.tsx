@@ -15,6 +15,11 @@ import Casting from "./pages/Casting";
 import Finishing from "./pages/Finishing";
 import QualityControl from "./pages/QualityControl";
 import Executive from "./pages/Executive";
+import PQOffering from "./pages/PQOffering";
+import AutoHotkeySolution from "./pages/solutions/AutoHotkeySolution";
+import ERPIntegrationSolution from "./pages/solutions/ERPIntegrationSolution";
+import ICEGateSolution from "./pages/solutions/ICEGateSolution";
+import KPIDashboardSolution from "./pages/solutions/KPIDashboardSolution";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -31,6 +36,11 @@ const ProtectedDashboard = () => (
         <Route path="/finishing" element={<Finishing />} />
         <Route path="/quality-control" element={<QualityControl />} />
         <Route path="/executive" element={<Executive />} />
+        <Route path="/pq-offering" element={<PQOffering />} />
+        <Route path="/pq-offering/autohotkey" element={<AutoHotkeySolution />} />
+        <Route path="/pq-offering/erp-integration" element={<ERPIntegrationSolution />} />
+        <Route path="/pq-offering/icegate" element={<ICEGateSolution />} />
+        <Route path="/pq-offering/kpi-dashboard" element={<KPIDashboardSolution />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </DashboardLayout>
