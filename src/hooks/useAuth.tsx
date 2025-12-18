@@ -1,42 +1,71 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { useNavigate } from "react-router-dom";
 
 interface User {
   username: string;
   name: string;
 }
 
+interface Session {
+  user: User;
+  expiresAt: number;
+}
+
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
+  login: (user: User) => void;
   logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+const SESSION_DURATION = 30 * 60 * 1000; // 30 minutes
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    const authStatus = localStorage.getItem("isAuthenticated");
-    const userData = localStorage.getItem("user");
+    const sessionData = sessionStorage.getItem("session");
     
-    if (authStatus === "true" && userData) {
-      setIsAuthenticated(true);
-      setUser(JSON.parse(userData));
+    if (sessionData) {
+      const session: Session = JSON.parse(sessionData);
+      
+      if (session.expiresAt > Date.now()) {
+        setIsAuthenticated(true);
+        setUser(session.user);
+        
+        // Refresh session on activity
+        const newSession: Session = {
+          user: session.user,
+          expiresAt: Date.now() + SESSION_DURATION
+        };
+        sessionStorage.setItem("session", JSON.stringify(newSession));
+      } else {
+        // Session expired
+        sessionStorage.removeItem("session");
+      }
     }
   }, []);
 
+  const login = (userData: User) => {
+    const session: Session = {
+      user: userData,
+      expiresAt: Date.now() + SESSION_DURATION
+    };
+    sessionStorage.setItem("session", JSON.stringify(session));
+    setIsAuthenticated(true);
+    setUser(userData);
+  };
+
   const logout = () => {
-    localStorage.removeItem("isAuthenticated");
-    localStorage.removeItem("user");
+    sessionStorage.removeItem("session");
     setIsAuthenticated(false);
     setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, logout }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

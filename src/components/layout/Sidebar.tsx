@@ -1,4 +1,4 @@
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import {
   Factory,
   Coins,
@@ -10,11 +10,13 @@ import {
   ChevronLeft,
   ChevronRight,
   LayoutDashboard,
-  LogOut,
+  Package,
+  Menu,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { useAuth } from "@/hooks/useAuth";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 const menuItems = [
   {
@@ -64,26 +66,18 @@ const menuItems = [
     path: "/executive",
     phase: 7,
   },
+  {
+    title: "PQ Offering",
+    icon: Package,
+    path: "/pq-offering",
+  },
 ];
 
-export function Sidebar() {
-  const [collapsed, setCollapsed] = useState(false);
+function SidebarContent({ collapsed, onCollapse }: { collapsed: boolean; onCollapse?: () => void }) {
   const location = useLocation();
-  const navigate = useNavigate();
-  const { user, logout } = useAuth();
-
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
-  };
 
   return (
-    <aside
-      className={cn(
-        "h-screen bg-sidebar sticky top-0 flex flex-col transition-all duration-300",
-        collapsed ? "w-16" : "w-64"
-      )}
-    >
+    <div className="h-full flex flex-col bg-sidebar">
       {/* Logo */}
       <div className="h-16 flex items-center justify-between px-4 border-b border-sidebar-border">
         {!collapsed && (
@@ -91,12 +85,17 @@ export function Sidebar() {
             💎 Jewel Integra
           </span>
         )}
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          className="p-1.5 rounded-md hover:bg-sidebar-accent text-sidebar-foreground/70 hover:text-sidebar-foreground transition-colors"
-        >
-          {collapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
-        </button>
+        {collapsed && (
+          <span className="text-xl">💎</span>
+        )}
+        {onCollapse && (
+          <button
+            onClick={onCollapse}
+            className="p-1.5 rounded-md hover:bg-sidebar-accent text-sidebar-foreground/70 hover:text-sidebar-foreground transition-colors"
+          >
+            {collapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
+          </button>
+        )}
       </div>
 
       {/* Navigation */}
@@ -123,27 +122,56 @@ export function Sidebar() {
           );
         })}
       </nav>
+    </div>
+  );
+}
 
-      {/* User & Logout */}
-      <div className="p-3 border-t border-sidebar-border">
-        {!collapsed && user && (
-          <div className="mb-2 px-2">
-            <p className="text-sm font-medium text-sidebar-foreground truncate">{user.name}</p>
-            <p className="text-xs text-sidebar-muted truncate">{user.username}</p>
-          </div>
-        )}
-        <button
-          onClick={handleLogout}
-          className={cn(
-            "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors",
-            collapsed && "justify-center"
-          )}
-          title={collapsed ? "Logout" : undefined}
-        >
-          <LogOut size={20} />
-          {!collapsed && <span>Logout</span>}
-        </button>
-      </div>
+export function Sidebar() {
+  const [collapsed, setCollapsed] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Mobile sidebar with Sheet
+  if (isMobile) {
+    return (
+      <>
+        <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+          <SheetTrigger asChild>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="fixed top-4 left-4 z-50 lg:hidden bg-white shadow-md"
+            >
+              <Menu size={20} />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left" className="p-0 w-64">
+            <SidebarContent collapsed={false} />
+          </SheetContent>
+        </Sheet>
+      </>
+    );
+  }
+
+  // Desktop sidebar
+  return (
+    <aside
+      className={cn(
+        "h-screen sticky top-0 flex flex-col transition-all duration-300",
+        collapsed ? "w-16" : "w-64"
+      )}
+    >
+      <SidebarContent collapsed={collapsed} onCollapse={() => setCollapsed(!collapsed)} />
     </aside>
   );
 }
