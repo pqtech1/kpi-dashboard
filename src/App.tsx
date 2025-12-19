@@ -16,6 +16,8 @@ import Finishing from "./pages/Finishing";
 import QualityControl from "./pages/QualityControl";
 import Executive from "./pages/Executive";
 import PQOffering from "./pages/PQOffering";
+import Profile from "./pages/Profile";
+import Settings from "./pages/Settings";
 import AutoHotkeySolution from "./pages/solutions/AutoHotkeySolution";
 import ERPIntegrationSolution from "./pages/solutions/ERPIntegrationSolution";
 import ICEGateSolution from "./pages/solutions/ICEGateSolution";
@@ -41,6 +43,8 @@ const ProtectedDashboard = () => (
         <Route path="/pq-offering/erp-integration" element={<ERPIntegrationSolution />} />
         <Route path="/pq-offering/icegate" element={<ICEGateSolution />} />
         <Route path="/pq-offering/kpi-dashboard" element={<KPIDashboardSolution />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/settings" element={<Settings />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </DashboardLayout>
