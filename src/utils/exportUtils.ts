@@ -74,6 +74,7 @@ export const exportToPDF = async () => {
   const pageWidth = pdf.internal.pageSize.getWidth();
   const pageHeight = pdf.internal.pageSize.getHeight();
   const margin = 15;
+  const contentWidth = pageWidth - (margin * 2);
   let yPosition = margin;
 
   // Title
@@ -122,7 +123,7 @@ export const exportToPDF = async () => {
         fontStyle: 'bold'
       },
       alternateRowStyles: { fillColor: [248, 250, 252] },
-      tableWidth: pageWidth - (margin * 2),
+      tableWidth: contentWidth,
     });
 
     yPosition = (pdf as any).lastAutoTable.finalY + 15;
@@ -156,72 +157,69 @@ export const exportToPDF = async () => {
         fontStyle: 'bold'
       },
       alternateRowStyles: { fillColor: [248, 250, 252] },
-      tableWidth: pageWidth - (margin * 2),
-      columnStyles: {
-        0: { cellWidth: 'auto' },
-      },
+      tableWidth: contentWidth,
     });
 
     yPosition = (pdf as any).lastAutoTable.finalY + 15;
   });
 
-  // Capture charts as images
-  if (yPosition > pageHeight - 100) {
-    pdf.addPage();
-    yPosition = margin;
-  }
+  // Capture charts as images - only capture chart elements, not the whole page
+  const chartContainers = element.querySelectorAll('.recharts-responsive-container, [class*="chart"]');
+  const chartCards = element.querySelectorAll('[class*="ChartCard"]');
+  const chartsToCapture = chartCards.length > 0 ? chartCards : chartContainers;
 
-  pdf.setFontSize(14);
-  pdf.setTextColor(33, 37, 41);
-  pdf.text('Charts & Visualizations', margin, yPosition);
-  yPosition += 10;
+  if (chartsToCapture.length > 0) {
+    if (yPosition > pageHeight - 80) {
+      pdf.addPage();
+      yPosition = margin;
+    }
 
-  // Capture the main content as an image for charts
-  try {
-    const canvas = await html2canvas(element, {
-      scale: 1.5,
-      useCORS: true,
-      logging: false,
-      backgroundColor: '#ffffff',
-      windowWidth: element.scrollWidth,
-      windowHeight: element.scrollHeight,
-    });
+    pdf.setFontSize(14);
+    pdf.setTextColor(33, 37, 41);
+    pdf.text('Charts & Visualizations', margin, yPosition);
+    yPosition += 10;
 
-    const imgData = canvas.toDataURL('image/png');
-    const imgWidth = pageWidth - (margin * 2);
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-    // Add image across multiple pages if needed
-    let remainingHeight = imgHeight;
-    let sourceY = 0;
-
-    while (remainingHeight > 0) {
-      const availableHeight = pageHeight - yPosition - margin;
-      const heightToDraw = Math.min(remainingHeight, availableHeight);
+    for (let i = 0; i < chartsToCapture.length; i++) {
+      const chartElement = chartsToCapture[i] as HTMLElement;
       
-      if (heightToDraw > 20) {
-        pdf.addImage(
-          imgData, 
-          'PNG', 
-          margin, 
-          yPosition, 
-          imgWidth, 
-          imgHeight,
-          undefined,
-          'FAST'
-        );
-      }
+      // Get chart title from parent card if available
+      const parentCard = chartElement.closest('[class*="card"]');
+      const chartTitle = parentCard?.querySelector('h3, [class*="title"], .font-semibold')?.textContent?.trim();
 
-      remainingHeight -= heightToDraw;
-      sourceY += heightToDraw;
+      try {
+        const canvas = await html2canvas(chartElement, {
+          scale: 2,
+          useCORS: true,
+          logging: false,
+          backgroundColor: '#ffffff',
+        });
 
-      if (remainingHeight > 0) {
-        pdf.addPage();
-        yPosition = margin;
+        const imgData = canvas.toDataURL('image/png');
+        const imgWidth = contentWidth;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+        // Check if we need a new page
+        if (yPosition + imgHeight + 15 > pageHeight - margin) {
+          pdf.addPage();
+          yPosition = margin;
+        }
+
+        // Add chart title
+        if (chartTitle) {
+          pdf.setFontSize(11);
+          pdf.setTextColor(33, 37, 41);
+          pdf.text(chartTitle, margin, yPosition);
+          yPosition += 6;
+        }
+
+        // Add chart image
+        pdf.addImage(imgData, 'PNG', margin, yPosition, imgWidth, imgHeight);
+        yPosition += imgHeight + 15;
+
+      } catch (error) {
+        console.error('Error capturing chart:', error);
       }
     }
-  } catch (error) {
-    console.error('Error capturing charts:', error);
   }
 
   const date = new Date().toISOString().split('T')[0];
