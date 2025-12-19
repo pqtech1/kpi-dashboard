@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 interface ChartCardProps {
   title: string;
@@ -18,7 +19,12 @@ export function ChartCard({ title, subtitle, children, className, action }: Char
         </div>
         {action}
       </div>
-      {children}
+      <ScrollArea className="w-full">
+        <div className="min-w-[300px]">
+          {children}
+        </div>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
     </div>
   );
 }
