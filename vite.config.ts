@@ -4,14 +4,7 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 
 export default defineConfig(({ mode }) => ({
-  server: {
-    host: true, // or "::" is also fine
-    port: 8080,
-    allowedHosts: [
-      "techupgrad.in",
-      ".techupgrad.in", // allows subdomains if needed
-    ],
-  },
+  base: "/kpi/",
   plugins: [react(), mode === "development" && componentTagger()].filter(
     Boolean
   ),
