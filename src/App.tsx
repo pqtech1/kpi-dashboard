@@ -39,10 +39,19 @@ const ProtectedDashboard = () => (
         <Route path="/quality-control" element={<QualityControl />} />
         <Route path="/executive" element={<Executive />} />
         <Route path="/pq-offering" element={<PQOffering />} />
-        <Route path="/pq-offering/autohotkey" element={<AutoHotkeySolution />} />
-        <Route path="/pq-offering/erp-integration" element={<ERPIntegrationSolution />} />
+        <Route
+          path="/pq-offering/autohotkey"
+          element={<AutoHotkeySolution />}
+        />
+        <Route
+          path="/pq-offering/erp-integration"
+          element={<ERPIntegrationSolution />}
+        />
         <Route path="/pq-offering/icegate" element={<ICEGateSolution />} />
-        <Route path="/pq-offering/kpi-dashboard" element={<KPIDashboardSolution />} />
+        <Route
+          path="/pq-offering/kpi-dashboard"
+          element={<KPIDashboardSolution />}
+        />
         <Route path="/profile" element={<Profile />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="*" element={<NotFound />} />
@@ -56,7 +65,8 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
+      {/* Add basename="/kpi" here */}
+      <BrowserRouter basename="/kpi">
         <AuthProvider>
           <Routes>
             <Route path="/login" element={<Login />} />
