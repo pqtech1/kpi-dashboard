@@ -40,3 +40,46 @@
 .read-the-docs {
   color: #888;
 }
+
+/* .chart-card {
+  width: 100%;
+  min-height: 350px;
+  background: white;
+  padding: 16px;
+}
+
+
+.recharts-animate {
+  animation: none !important;
+} */
+
+/* Ensure charts are visible for export */
+.chart-card,
+.chart-container,
+.graph-container {
+  background-color: white !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 8px;
+  padding: 16px;
+  position: relative;
+}
+
+/* Ensure canvas elements are visible */
+canvas {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Ensure SVG charts are visible */
+svg {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Hide tooltips during export */
+[data-export-ready="true"] .recharts-tooltip-wrapper,
+[data-export-ready="true"] .chartjs-tooltip {
+  display: none !important;
+}

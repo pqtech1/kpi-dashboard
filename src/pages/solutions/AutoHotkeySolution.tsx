@@ -63,7 +63,7 @@ const AutoHotkeySolution = () => {
         <Link to="/pq-offering">
           <Button variant="ghost" className="mb-4 gap-2">
             <ArrowLeft className="w-4 h-4" />
-            Back to PQ Offering
+            Back to Our Services
           </Button>
         </Link>
         
@@ -178,7 +178,7 @@ const AutoHotkeySolution = () => {
                 </div>
                 <ul className="space-y-3">
                   {[
-                    "Manual data entry taking 4+ hours daily",
+                    "Manual data entry taking 24 hours daily",
                     "High error rate in repetitive tasks",
                     "Inconsistent process execution",
                     "Employee fatigue from monotonous work",
@@ -201,7 +201,7 @@ const AutoHotkeySolution = () => {
                 </div>
                 <ul className="space-y-3">
                   {[
-                    "Automated data entry in under 30 minutes",
+                    "Automated data entry in under 24 minutes",
                     "Near-zero error rate with validation",
                     "Standardized, repeatable processes",
                     "Employees focus on high-value tasks",
@@ -296,7 +296,7 @@ const AutoHotkeySolution = () => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {[
                 { label: "ROI Achievement", value: "300%", sub: "Within 6 months" },
-                { label: "Cost Savings", value: "₹15L", sub: "Annual savings" },
+                { label: "Cost Savings", value: "₹15L", sub: "Monthly savings" },
                 { label: "Employee Satisfaction", value: "92%", sub: "Survey results" },
                 { label: "Process Speed", value: "10x", sub: "Faster execution" },
               ].map((stat) => (

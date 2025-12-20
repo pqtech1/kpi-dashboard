@@ -69,18 +69,21 @@ const ERPIntegrationSolution = () => {
         <Link to="/pq-offering">
           <Button variant="ghost" className="mb-4 gap-2">
             <ArrowLeft className="w-4 h-4" />
-            Back to PQ Offering
+            Back to Our Services
           </Button>
         </Link>
-        
+
         <div className="flex items-start gap-4">
           <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center">
             <Building2 className="w-8 h-8 text-white" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Emperor & GATI ERP Integration</h1>
+            <h1 className="text-3xl font-bold text-foreground">
+              Emperor, GATI, SAP and other ERP's Integration
+            </h1>
             <p className="text-lg text-muted-foreground mt-1">
-              Seamless connectivity with Emperor and GATI ERP systems for unified data flow
+              Seamless connectivity with Emperor, GATI, SAP and other ERP's
+              systems for unified data flow
             </p>
           </div>
         </div>
@@ -101,11 +104,14 @@ const ERPIntegrationSolution = () => {
           </CardHeader>
           <CardContent className="prose max-w-none">
             <p className="text-muted-foreground leading-relaxed">
-              Our ERP Integration solution creates a seamless bridge between your jewelry manufacturing 
-              operations and enterprise resource planning systems like Emperor and GATI. This integration 
-              enables real-time data synchronization, eliminating manual data entry, reducing errors, and 
-              providing a unified view of your entire business operations. From inventory management to 
-              order processing, every transaction flows automatically between systems.
+              Our ERP Integration solution creates a seamless bridge between
+              your jewelry manufacturing operations and enterprise resource
+              planning systems like Emperor, GATI, SAP and other ERP's. This
+              integration enables real-time data synchronization, eliminating
+              manual data entry, reducing errors, and providing a unified view
+              of your entire business operations. From inventory management to
+              order processing, every transaction flows automatically between
+              systems.
             </p>
           </CardContent>
         </Card>
@@ -119,9 +125,24 @@ const ERPIntegrationSolution = () => {
         className="grid grid-cols-1 md:grid-cols-3 gap-4"
       >
         {[
-          { icon: RefreshCw, title: "Real-time Sync", value: "24/7", desc: "Continuous data synchronization" },
-          { icon: Database, title: "Data Accuracy", value: "99.9%", desc: "Elimination of manual errors" },
-          { icon: Shield, title: "System Uptime", value: "99.95%", desc: "High availability guarantee" },
+          {
+            icon: RefreshCw,
+            title: "Real-time Sync",
+            value: "24/7",
+            desc: "Continuous data synchronization",
+          },
+          {
+            icon: Database,
+            title: "Data Accuracy",
+            value: "99.9%",
+            desc: "Elimination of manual errors",
+          },
+          {
+            icon: Shield,
+            title: "System Uptime",
+            value: "99.95%",
+            desc: "High availability guarantee",
+          },
         ].map((benefit) => (
           <Card key={benefit.title} className="text-center">
             <CardContent className="pt-6">
@@ -129,7 +150,9 @@ const ERPIntegrationSolution = () => {
                 <benefit.icon className="w-6 h-6 text-primary" />
               </div>
               <h3 className="font-semibold text-foreground">{benefit.title}</h3>
-              <p className="text-3xl font-bold text-primary my-2">{benefit.value}</p>
+              <p className="text-3xl font-bold text-primary my-2">
+                {benefit.value}
+              </p>
               <p className="text-sm text-muted-foreground">{benefit.desc}</p>
             </CardContent>
           </Card>
@@ -144,7 +167,9 @@ const ERPIntegrationSolution = () => {
       >
         <Card>
           <CardHeader>
-            <CardTitle>Performance Metrics: Before vs After Integration (%)</CardTitle>
+            <CardTitle>
+              Performance Metrics: Before vs After Integration (%)
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="h-80">
@@ -155,8 +180,16 @@ const ERPIntegrationSolution = () => {
                   <YAxis dataKey="metric" type="category" width={120} />
                   <Tooltip />
                   <Legend />
-                  <Bar dataKey="before" name="Before Integration" fill="#ef4444" />
-                  <Bar dataKey="after" name="After Integration" fill="#22c55e" />
+                  <Bar
+                    dataKey="before"
+                    name="Before Integration"
+                    fill="#ef4444"
+                  />
+                  <Bar
+                    dataKey="after"
+                    name="After Integration"
+                    fill="#22c55e"
+                  />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -180,7 +213,9 @@ const ERPIntegrationSolution = () => {
               <div className="p-6 rounded-xl bg-red-50 border border-red-200">
                 <div className="flex items-center gap-2 mb-4">
                   <XCircle className="w-6 h-6 text-red-500" />
-                  <h3 className="text-lg font-semibold text-red-700">Without ERP Integration</h3>
+                  <h3 className="text-lg font-semibold text-red-700">
+                    Without ERP Integration
+                  </h3>
                 </div>
                 <ul className="space-y-3">
                   {[
@@ -189,7 +224,7 @@ const ERPIntegrationSolution = () => {
                     "Delayed inventory updates",
                     "No real-time visibility",
                     "Duplicate data entry efforts",
-                    "Slow order processing"
+                    "Slow order processing",
                   ].map((item, i) => (
                     <li key={i} className="flex items-start gap-2 text-red-700">
                       <AlertTriangle className="w-4 h-4 mt-1 flex-shrink-0" />
@@ -203,7 +238,9 @@ const ERPIntegrationSolution = () => {
               <div className="p-6 rounded-xl bg-green-50 border border-green-200">
                 <div className="flex items-center gap-2 mb-4">
                   <CheckCircle className="w-6 h-6 text-green-500" />
-                  <h3 className="text-lg font-semibold text-green-700">With ERP Integration</h3>
+                  <h3 className="text-lg font-semibold text-green-700">
+                    With ERP Integration
+                  </h3>
                 </div>
                 <ul className="space-y-3">
                   {[
@@ -212,9 +249,12 @@ const ERPIntegrationSolution = () => {
                     "Real-time inventory tracking",
                     "Complete operational visibility",
                     "Zero duplicate entry needed",
-                    "Instant order processing"
+                    "Instant order processing",
                   ].map((item, i) => (
-                    <li key={i} className="flex items-start gap-2 text-green-700">
+                    <li
+                      key={i}
+                      className="flex items-start gap-2 text-green-700"
+                    >
                       <CheckCircle className="w-4 h-4 mt-1 flex-shrink-0" />
                       <span>{item}</span>
                     </li>
@@ -246,8 +286,20 @@ const ERPIntegrationSolution = () => {
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Area type="monotone" dataKey="manual" name="Manual Process" stroke="#ef4444" fill="#fecaca" />
-                  <Area type="monotone" dataKey="automated" name="Automated" stroke="#22c55e" fill="#bbf7d0" />
+                  <Area
+                    type="monotone"
+                    dataKey="manual"
+                    name="Manual Process"
+                    stroke="#ef4444"
+                    fill="#fecaca"
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="automated"
+                    name="Automated"
+                    stroke="#22c55e"
+                    fill="#bbf7d0"
+                  />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
@@ -265,8 +317,20 @@ const ERPIntegrationSolution = () => {
                   <PolarGrid />
                   <PolarAngleAxis dataKey="subject" tick={{ fontSize: 11 }} />
                   <PolarRadiusAxis angle={30} domain={[0, 100]} />
-                  <Radar name="With Integration" dataKey="A" stroke="#22c55e" fill="#22c55e" fillOpacity={0.5} />
-                  <Radar name="Without Integration" dataKey="B" stroke="#ef4444" fill="#ef4444" fillOpacity={0.3} />
+                  <Radar
+                    name="With Integration"
+                    dataKey="A"
+                    stroke="#22c55e"
+                    fill="#22c55e"
+                    fillOpacity={0.5}
+                  />
+                  <Radar
+                    name="Without Integration"
+                    dataKey="B"
+                    stroke="#ef4444"
+                    fill="#ef4444"
+                    fillOpacity={0.3}
+                  />
                   <Legend />
                 </RadarChart>
               </ResponsiveContainer>
@@ -291,13 +355,34 @@ const ERPIntegrationSolution = () => {
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {[
-                { label: "Processing Speed", value: "5x", sub: "Faster operations" },
-                { label: "Cost Reduction", value: "40%", sub: "Operational savings" },
-                { label: "Data Accuracy", value: "99.9%", sub: "Near-perfect sync" },
-                { label: "Staff Efficiency", value: "+65%", sub: "Productivity gain" },
+                {
+                  label: "Processing Speed",
+                  value: "5x",
+                  sub: "Faster operations",
+                },
+                {
+                  label: "Cost Reduction",
+                  value: "40%",
+                  sub: "Operational savings",
+                },
+                {
+                  label: "Data Accuracy",
+                  value: "99.9%",
+                  sub: "Near-perfect sync",
+                },
+                {
+                  label: "Staff Efficiency",
+                  value: "+65%",
+                  sub: "Productivity gain",
+                },
               ].map((stat) => (
-                <div key={stat.label} className="text-center p-4 bg-white rounded-xl shadow-sm">
-                  <p className="text-2xl font-bold text-primary">{stat.value}</p>
+                <div
+                  key={stat.label}
+                  className="text-center p-4 bg-white rounded-xl shadow-sm"
+                >
+                  <p className="text-2xl font-bold text-primary">
+                    {stat.value}
+                  </p>
                   <p className="font-medium text-foreground">{stat.label}</p>
                   <p className="text-xs text-muted-foreground">{stat.sub}</p>
                 </div>

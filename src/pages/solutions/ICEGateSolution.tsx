@@ -65,18 +65,21 @@ const ICEGateSolution = () => {
         <Link to="/pq-offering">
           <Button variant="ghost" className="mb-4 gap-2">
             <ArrowLeft className="w-4 h-4" />
-            Back to PQ Offering
+            Back to Our Services
           </Button>
         </Link>
-        
+
         <div className="flex items-start gap-4">
           <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center">
             <Globe className="w-8 h-8 text-white" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-foreground">ICEGate Integration</h1>
+            <h1 className="text-3xl font-bold text-foreground">
+              IMEXIO and ICEGate Integration
+            </h1>
             <p className="text-lg text-muted-foreground mt-1">
-              Automated customs clearance and compliance with Indian Customs EDI Gateway
+              Automated customs clearance and compliance with Indian Customs EDI
+              Gateway
             </p>
           </div>
         </div>
@@ -92,16 +95,18 @@ const ICEGateSolution = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Globe className="w-5 h-5 text-primary" />
-              What is ICEGate Integration?
+              What is IMEXIO and ICEGate Integration?
             </CardTitle>
           </CardHeader>
           <CardContent className="prose max-w-none">
             <p className="text-muted-foreground leading-relaxed">
-              ICEGate (Indian Customs Electronic Gateway) is the national portal for customs electronic 
-              data interchange. Our integration solution automates the entire customs filing process, 
-              from document preparation to duty calculation and compliance verification. This eliminates 
-              manual paperwork, reduces clearance times, and ensures 100% compliance with Indian customs 
-              regulations for jewelry import/export operations.
+              ICEGate (Indian Customs Electronic Gateway) is the national portal
+              for customs electronic data interchange. Our integration solution
+              automates the entire customs filing process, from document
+              preparation to duty calculation and compliance verification. This
+              eliminates manual paperwork, reduces clearance times, and ensures
+              100% compliance with Indian customs regulations for jewelry
+              import/export operations.
             </p>
           </CardContent>
         </Card>
@@ -115,9 +120,24 @@ const ICEGateSolution = () => {
         className="grid grid-cols-1 md:grid-cols-3 gap-4"
       >
         {[
-          { icon: Clock, title: "Clearance Time", value: "75%", desc: "Faster customs processing" },
-          { icon: Shield, title: "Compliance Rate", value: "100%", desc: "Full regulatory compliance" },
-          { icon: IndianRupee, title: "Cost Savings", value: "₹8L+", desc: "Annual penalty avoidance" },
+          {
+            icon: Clock,
+            title: "Clearance Time",
+            value: "75%",
+            desc: "Faster customs processing",
+          },
+          {
+            icon: Shield,
+            title: "Compliance Rate",
+            value: "100%",
+            desc: "Full regulatory compliance",
+          },
+          {
+            icon: IndianRupee,
+            title: "Cost Savings",
+            value: "₹8L+",
+            desc: "Annual penalty avoidance",
+          },
         ].map((benefit) => (
           <Card key={benefit.title} className="text-center">
             <CardContent className="pt-6">
@@ -125,7 +145,9 @@ const ICEGateSolution = () => {
                 <benefit.icon className="w-6 h-6 text-primary" />
               </div>
               <h3 className="font-semibold text-foreground">{benefit.title}</h3>
-              <p className="text-3xl font-bold text-primary my-2">{benefit.value}</p>
+              <p className="text-3xl font-bold text-primary my-2">
+                {benefit.value}
+              </p>
               <p className="text-sm text-muted-foreground">{benefit.desc}</p>
             </CardContent>
           </Card>
@@ -152,7 +174,11 @@ const ICEGateSolution = () => {
                   <Tooltip />
                   <Legend />
                   <Bar dataKey="manual" name="Manual Process" fill="#ef4444" />
-                  <Bar dataKey="automated" name="ICEGate Automated" fill="#22c55e" />
+                  <Bar
+                    dataKey="automated"
+                    name="ICEGate Automated"
+                    fill="#22c55e"
+                  />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -176,7 +202,9 @@ const ICEGateSolution = () => {
               <div className="p-6 rounded-xl bg-red-50 border border-red-200">
                 <div className="flex items-center gap-2 mb-4">
                   <XCircle className="w-6 h-6 text-red-500" />
-                  <h3 className="text-lg font-semibold text-red-700">Without ICEGate Integration</h3>
+                  <h3 className="text-lg font-semibold text-red-700">
+                    Without ICEGate Integration
+                  </h3>
                 </div>
                 <ul className="space-y-3">
                   {[
@@ -185,7 +213,7 @@ const ICEGateSolution = () => {
                     "Delayed shipment clearances",
                     "High risk of compliance errors",
                     "Manual duty calculations",
-                    "Unpredictable clearance times"
+                    "Unpredictable clearance times",
                   ].map((item, i) => (
                     <li key={i} className="flex items-start gap-2 text-red-700">
                       <AlertTriangle className="w-4 h-4 mt-1 flex-shrink-0" />
@@ -199,7 +227,9 @@ const ICEGateSolution = () => {
               <div className="p-6 rounded-xl bg-green-50 border border-green-200">
                 <div className="flex items-center gap-2 mb-4">
                   <CheckCircle className="w-6 h-6 text-green-500" />
-                  <h3 className="text-lg font-semibold text-green-700">With ICEGate Integration</h3>
+                  <h3 className="text-lg font-semibold text-green-700">
+                    With ICEGate Integration
+                  </h3>
                 </div>
                 <ul className="space-y-3">
                   {[
@@ -208,9 +238,12 @@ const ICEGateSolution = () => {
                     "Fast-track clearance process",
                     "Built-in compliance validation",
                     "Automatic duty calculation",
-                    "Predictable processing times"
+                    "Predictable processing times",
                   ].map((item, i) => (
-                    <li key={i} className="flex items-start gap-2 text-green-700">
+                    <li
+                      key={i}
+                      className="flex items-start gap-2 text-green-700"
+                    >
                       <CheckCircle className="w-4 h-4 mt-1 flex-shrink-0" />
                       <span>{item}</span>
                     </li>
@@ -242,8 +275,20 @@ const ICEGateSolution = () => {
                   <YAxis domain={[90, 100]} />
                   <Tooltip />
                   <Legend />
-                  <Line type="monotone" dataKey="compliance" name="Compliance %" stroke="#22c55e" strokeWidth={2} />
-                  <Line type="monotone" dataKey="target" name="Target" stroke="#94a3b8" strokeDasharray="5 5" />
+                  <Line
+                    type="monotone"
+                    dataKey="compliance"
+                    name="Compliance %"
+                    stroke="#22c55e"
+                    strokeWidth={2}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="target"
+                    name="Target"
+                    stroke="#94a3b8"
+                    strokeDasharray="5 5"
+                  />
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -257,24 +302,21 @@ const ICEGateSolution = () => {
           <CardContent>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={costBreakdownData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={60}
-                    outerRadius={80}
-                    paddingAngle={5}
-                    dataKey="value"
-                    label={({ name, value }) => `${value}%`}
-                  >
+                <BarChart
+                  data={costBreakdownData}
+                  layout="vertical"
+                  margin={{ top: 20, right: 30, left: 40, bottom: 20 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis type="number" />
+                  <YAxis type="category" dataKey="name" />
+                  <Tooltip formatter={(value) => `${value}%`} />
+                  <Bar dataKey="value">
                     {costBreakdownData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
-                  </Pie>
-                  <Tooltip />
-                  <Legend />
-                </PieChart>
+                  </Bar>
+                </BarChart>
               </ResponsiveContainer>
             </div>
           </CardContent>
@@ -297,13 +339,34 @@ const ICEGateSolution = () => {
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {[
-                { label: "Clearance Speed", value: "4x", sub: "Faster processing" },
-                { label: "Compliance Score", value: "100%", sub: "Zero violations" },
-                { label: "Annual Savings", value: "₹12L", sub: "Total cost reduction" },
-                { label: "Documents/Day", value: "50+", sub: "Processing capacity" },
+                {
+                  label: "Clearance Speed",
+                  value: "4x",
+                  sub: "Faster processing",
+                },
+                {
+                  label: "Compliance Score",
+                  value: "100%",
+                  sub: "Zero violations",
+                },
+                {
+                  label: "Monthly Savings",
+                  value: "₹15L",
+                  sub: "Total cost reduction",
+                },
+                {
+                  label: "Documents/Day",
+                  value: "50+",
+                  sub: "Processing capacity",
+                },
               ].map((stat) => (
-                <div key={stat.label} className="text-center p-4 bg-white rounded-xl shadow-sm">
-                  <p className="text-2xl font-bold text-primary">{stat.value}</p>
+                <div
+                  key={stat.label}
+                  className="text-center p-4 bg-white rounded-xl shadow-sm"
+                >
+                  <p className="text-2xl font-bold text-primary">
+                    {stat.value}
+                  </p>
                   <p className="font-medium text-foreground">{stat.label}</p>
                   <p className="text-xs text-muted-foreground">{stat.sub}</p>
                 </div>

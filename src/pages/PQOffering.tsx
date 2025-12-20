@@ -1,101 +1,133 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { 
-  Keyboard, 
-  Building2, 
-  Globe, 
+import {
+  Keyboard,
+  Building2,
+  Globe,
   BarChart3,
   ArrowRight,
-  CheckCircle
+  CheckCircle,
+  ExternalLink,
+  Phone,
+  Mail,
+  Network,
+  Cpu,
+  LineChart,
+  Boxes,
+  Zap,
+  Factory,
 } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 const offerings = [
   {
     id: "autohotkey",
     title: "AutoHotkey Solutions",
     icon: Keyboard,
-    description: "Powerful automation scripts for repetitive tasks and workflow optimization",
+    description:
+      "Powerful automation scripts for repetitive tasks and workflow optimization",
     color: "from-orange-500 to-red-500",
-    features: ["Task Automation", "Keyboard Shortcuts", "Process Optimization", "Time Savings"]
+    features: ["Task Automation", "Keyboard Shortcuts", "Process Optimization"],
   },
   {
     id: "erp-integration",
-    title: "Emperor & GATI ERP Integration",
+    title: "ERP Integration",
     icon: Building2,
-    description: "Seamless integration with Emperor and GATI ERP systems for unified data flow",
+    description:
+      "Seamless integration with Emperor, GATI, SAP and other ERP systems",
     color: "from-blue-500 to-indigo-500",
-    features: ["Data Sync", "Real-time Updates", "Inventory Management", "Order Processing"]
+    features: ["Real-time Sync", "Inventory Flow", "Order Automation"],
   },
   {
     id: "icegate",
-    title: "ICEGate Integration",
+    title: "IMEXIO & ICEGATE Automation",
     icon: Globe,
-    description: "Automated customs clearance and compliance with Indian Customs EDI Gateway",
+    description: "Automated export filing and customs compliance with ICEGATE",
     color: "from-green-500 to-emerald-500",
-    features: ["Customs Filing", "Document Automation", "Compliance", "Duty Calculation"]
+    features: ["Export Filing", "Compliance", "Duty Calculation"],
   },
   {
     id: "kpi-dashboard",
-    title: "KPI Dashboard Solution",
+    title: "KPI Dashboard Solutions",
     icon: BarChart3,
-    description: "Comprehensive production monitoring with real-time KPIs and analytics",
+    description: "Real-time production KPIs and decision-ready analytics",
     color: "from-purple-500 to-pink-500",
-    features: ["Real-time Metrics", "Custom Reports", "Trend Analysis", "Alerts"]
-  }
+    features: ["Live Metrics", "Alerts", "Production Planning"],
+  },
 ];
 
 const PQOffering = () => {
   return (
-    <div className="space-y-8">
-      {/* Header */}
+    <div className="space-y-16">
+      {/* ================= HEADER ================= */}
       <motion.div
-        initial={{ opacity: 0, y: -20 }}
+        initial={{ opacity: 0, y: -14 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-center max-w-3xl mx-auto"
+        className="text-center max-w-5xl mx-auto"
       >
-        <h1 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
-          PQ Offering Solutions
-        </h1>
-        <p className="text-lg text-muted-foreground">
-          Enterprise-grade solutions tailored for jewelry manufacturing excellence. 
-          Explore our comprehensive suite of integrations and tools.
+        <div className="flex items-center justify-center gap-4 mb-3">
+          <img
+            src="/cropped-pq-logo.png"
+            alt="Positive Quadrant"
+            className="h-12 w-12 object-contain"
+          />
+          <div className="text-left">
+            <h1 className="text-2xl lg:text-3xl font-bold text-foreground leading-tight">
+              Positive Quadrant Technologies LLP
+            </h1>
+          </div>
+        </div>
+
+        <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+          Enterprise-grade ERP integrations and AI-powered digital solutions
+          purpose-built for the jewelry manufacturing & retail ecosystem.
         </p>
       </motion.div>
 
-      {/* Offerings Grid */}
+      {/* ================= OFFERINGS GRID ================= */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {offerings.map((offering, index) => (
           <motion.div
             key={offering.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
+            transition={{ delay: index * 0.08 }}
           >
             <Link to={`/pq-offering/${offering.id}`}>
-              <Card className="h-full hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer group overflow-hidden">
-                <CardHeader className="pb-4">
-                  <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${offering.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+              <Card className="h-full group hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                <CardHeader>
+                  <div
+                    className={`w-14 h-14 rounded-xl bg-gradient-to-br ${offering.color} flex items-center justify-center mb-4`}
+                  >
                     <offering.icon className="w-7 h-7 text-white" />
                   </div>
+
                   <CardTitle className="text-xl flex items-center gap-2">
                     {offering.title}
-                    <ArrowRight className="w-5 h-5 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+                    <ArrowRight className="w-5 h-5 opacity-0 group-hover:opacity-100 transition" />
                   </CardTitle>
+
                   <CardDescription className="text-base">
                     {offering.description}
                   </CardDescription>
                 </CardHeader>
+
                 <CardContent>
                   <div className="flex flex-wrap gap-2">
                     {offering.features.map((feature) => (
-                      <div 
+                      <span
                         key={feature}
-                        className="flex items-center gap-1.5 text-sm text-muted-foreground bg-muted/50 px-3 py-1 rounded-full"
+                        className="flex items-center gap-1.5 text-sm bg-muted/50 px-3 py-1 rounded-full"
                       >
                         <CheckCircle className="w-3.5 h-3.5 text-green-500" />
                         {feature}
-                      </div>
+                      </span>
                     ))}
                   </div>
                 </CardContent>
@@ -105,32 +137,114 @@ const PQOffering = () => {
         ))}
       </div>
 
-      {/* CTA Section */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5 }}
-        className="bg-gradient-to-r from-primary/10 to-accent/10 rounded-2xl p-8 text-center"
-      >
-        <h2 className="text-2xl font-bold text-foreground mb-3">
-          Need a Custom Solution?
-        </h2>
-        <p className="text-muted-foreground mb-6 max-w-xl mx-auto">
-          Our team specializes in creating tailored integrations for your unique business requirements. 
-          Contact us to discuss your specific needs.
-        </p>
-        <div className="flex items-center justify-center gap-4 flex-wrap">
-          <span className="px-4 py-2 bg-white rounded-lg shadow-sm text-sm font-medium">
-            Custom ERP Integration
-          </span>
-          <span className="px-4 py-2 bg-white rounded-lg shadow-sm text-sm font-medium">
-            API Development
-          </span>
-          <span className="px-4 py-2 bg-white rounded-lg shadow-sm text-sm font-medium">
-            Legacy System Migration
-          </span>
+      {/* ================= SUMMARY ================= */}
+      <div className="rounded-2xl border bg-muted/30 p-8 space-y-10">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-2xl font-bold text-center mb-6">
+            Enterprise Capabilities
+          </h2>
+
+          <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 text-muted-foreground">
+            <li className="flex items-start gap-3">
+              <Network className="w-5 h-5 text-primary mt-0.5" />
+              Mobile, Web, E-Commerce, IoT & Cloud Applications
+            </li>
+            <li className="flex items-start gap-3">
+              <Cpu className="w-5 h-5 text-primary mt-0.5" />
+              Emperor, GATI, SAP and other ERP's integration
+            </li>
+            <li className="flex items-start gap-3">
+              <LineChart className="w-5 h-5 text-primary mt-0.5" />
+              Real-time KPI dashboards & production planning
+            </li>
+            <li className="flex items-start gap-3">
+              <Boxes className="w-5 h-5 text-primary mt-0.5" />
+              CPX, STL & 3D design file tracking
+            </li>
+            <li className="flex items-start gap-3">
+              <Zap className="w-5 h-5 text-primary mt-0.5" />
+              AutoHotkey automation for daily operations
+            </li>
+            <li className="flex items-start gap-3">
+              <Factory className="w-5 h-5 text-primary mt-0.5" />
+              IMEXIO & ICEGATE export filing automation
+            </li>
+            <li className="flex items-start gap-3">
+              <CheckCircle className="w-5 h-5 text-primary mt-0.5" />
+              Custom ERP Integration
+            </li>
+            <li className="flex items-start gap-3">
+              <CheckCircle className="w-5 h-5 text-primary mt-0.5" />
+              API Development
+            </li>
+            <li className="flex items-start gap-3">
+              <CheckCircle className="w-5 h-5 text-primary mt-0.5" />
+              Legacy System Migration
+            </li>
+          </ul>
         </div>
-      </motion.div>
+
+        {/* Contact */}
+        <div className="border-t pt-6 grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+          <div className="space-y-2">
+            <h3 className="font-semibold">Contact Us</h3>
+
+            {/* Phone */}
+            <a
+              href="tel:+917219623991"
+              className="flex items-center gap-2 text-sm text-foreground/90 hover:text-primary transition-colors duration-200"
+            >
+              <Phone className="w-4 h-4 transition-transform duration-200 group-hover:scale-110" />
+              7219623991
+            </a>
+
+            {/* Email */}
+            <a
+              href="mailto:info@positivequadrant.in"
+              className="flex items-center gap-2 text-sm text-foreground/90 hover:text-primary transition-colors duration-200"
+            >
+              <Mail className="w-4 h-4 transition-transform duration-200 group-hover:scale-110" />
+              info@positivequadrant.in
+            </a>
+
+            {/* Website */}
+            <a
+              href="https://www.positivequadrant.in/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-sm text-primary hover:text-primary/80 transition-colors duration-200"
+            >
+              www.positivequadrant.in{" "}
+              <ExternalLink
+                size={14}
+                className="transition-transform duration-200 group-hover:translate-x-1"
+              />
+            </a>
+          </div>
+
+          <div className="space-y-2">
+            <h3 className="font-semibold">Explore</h3>
+
+            <a
+              href="https://www.positivequadrant.in/ai-solutions-for-jewelery-industry"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block text-sm text-primary hover:text-primary/80 transition-colors duration-200"
+            >
+              AI Solutions for Jewellery Industry
+            </a>
+
+            <a
+              href="https://www.positivequadrant.in/projects-and-portfolios"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block text-sm text-primary hover:text-primary/80 transition-colors duration-200"
+            >
+              Projects & Portfolio
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

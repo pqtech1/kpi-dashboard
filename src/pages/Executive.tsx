@@ -133,7 +133,7 @@ export default function Executive() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <KPICard
           title="Monthly Profit"
-          value="₹12.0L"
+          value="₹15.0L"
           trend={9.1}
           trendLabel="vs last month"
           icon={DollarSign}

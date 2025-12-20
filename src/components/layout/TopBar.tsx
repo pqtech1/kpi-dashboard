@@ -1,15 +1,17 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { 
-  LogOut, 
-  User, 
-  Settings, 
-  Bell, 
+import {
+  LogOut,
+  User,
+  Settings,
+  Bell,
   ChevronDown,
   FileDown,
   FileSpreadsheet,
-  FileText
+  FileText,
+  Loader2,
 } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -29,17 +31,30 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Progress } from "@/components/ui/progress";
+
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
+
 import { exportToPDF, exportToExcel } from "@/utils/exportUtils";
 
 export function TopBar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+
   const [isExporting, setIsExporting] = useState(false);
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
+  const [exportProgress, setExportProgress] = useState(0);
+  const [exportStatus, setExportStatus] = useState("");
 
   const handleLogout = () => {
     logout();
@@ -50,75 +65,126 @@ export function TopBar() {
     });
   };
 
-  const handleExport = async (format: 'pdf' | 'excel') => {
+  const updateExportProgress = (
+    step: number,
+    totalSteps: number,
+    message: string
+  ) => {
+    setExportProgress(Math.round((step / totalSteps) * 100));
+    setExportStatus(message);
+  };
+
+  const handleExport = async (type: "pdf" | "excel") => {
     setIsExporting(true);
+    setExportProgress(0);
+
     try {
-      if (format === 'pdf') {
-        await exportToPDF();
+      if (type === "pdf") {
+        updateExportProgress(1, 3, "Preparing data...");
+        await new Promise((r) => setTimeout(r, 400));
+
+        updateExportProgress(2, 3, "Generating PDF...");
+        const success = await exportToPDF();
+
+        if (!success) throw new Error("PDF export failed");
+
+        updateExportProgress(3, 3, "Export complete!");
         toast({
           title: "Export Successful",
-          description: "Report exported as PDF successfully.",
+          description: "PDF report exported successfully.",
         });
-      } else {
-        await exportToExcel();
+      }
+
+      if (type === "excel") {
+        updateExportProgress(1, 2, "Generating Excel...");
+        const success = exportToExcel();
+
+        if (!success) throw new Error("Excel export failed");
+
+        updateExportProgress(2, 2, "Export complete!");
         toast({
           title: "Export Successful",
-          description: "Report exported as Excel successfully.",
+          description: "Excel report exported successfully.",
         });
       }
     } catch (error) {
       toast({
         title: "Export Failed",
-        description: "There was an error exporting the report.",
+        description:
+          error instanceof Error ? error.message : "Something went wrong.",
         variant: "destructive",
       });
+    } finally {
+      setTimeout(() => {
+        setIsExporting(false);
+        setExportProgress(0);
+        setExportStatus("");
+      }, 1200);
     }
-    setIsExporting(false);
   };
 
   return (
     <>
       <header className="h-14 sm:h-16 bg-card border-b border-border flex items-center justify-between px-3 sm:px-4 lg:px-6 sticky top-0 z-40">
-        {/* Left side - Page title area */}
-        <div className="flex items-center gap-2 sm:gap-4 ml-12 lg:ml-0">
-          <h1 className="text-sm sm:text-lg font-semibold text-foreground truncate max-w-[150px] sm:max-w-none">
-            Production Quality Dashboard
+        {/* Left */}
+        <div className="flex items-center gap-2 ml-12 lg:ml-0">
+          <div className="hidden sm:block w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+          <h1 className="text-sm sm:text-lg font-semibold truncate">
+            Jewelery-Plant KPI Dashboard 
           </h1>
         </div>
 
-        {/* Right side - Actions */}
-        <div className="flex items-center gap-1 sm:gap-2 lg:gap-4">
-          {/* Export Button */}
+        {/* Right */}
+        <div className="flex items-center gap-2 sm:gap-4">
+          {/* Export Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="gap-1 sm:gap-2 h-8 sm:h-9 px-2 sm:px-3"
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-2 h-8 sm:h-9 px-3"
                 disabled={isExporting}
               >
-                <FileDown className="w-4 h-4" />
-                <span className="hidden sm:inline text-xs sm:text-sm">Export</span>
+                {isExporting ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <FileDown className="w-4 h-4" />
+                )}
+                <span className="hidden sm:inline">Export</span>
+                {!isExporting && (
+                  <ChevronDown className="w-3 h-3 hidden sm:block" />
+                )}
               </Button>
             </DropdownMenuTrigger>
+
             <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuLabel>Export Format</DropdownMenuLabel>
+              <DropdownMenuLabel>Export Options</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => handleExport('pdf')} className="gap-2 cursor-pointer">
+
+              <DropdownMenuItem
+                onClick={() => handleExport("pdf")}
+                disabled={isExporting}
+                className="gap-2 cursor-pointer"
+              >
                 <FileText className="w-4 h-4" />
-                Export as PDF
+                Detailed PDF Report
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleExport('excel')} className="gap-2 cursor-pointer">
+
+              <DropdownMenuItem
+                onClick={() => handleExport("excel")}
+                disabled={isExporting}
+                className="gap-2 cursor-pointer"
+              >
                 <FileSpreadsheet className="w-4 h-4" />
-                Export as Excel
+                Excel Data Export
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
 
           {/* Notifications */}
-          <Button variant="ghost" size="icon" className="relative h-8 w-8 sm:h-9 sm:w-9">
-            <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
-            <span className="absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 w-3.5 h-3.5 sm:w-4 sm:h-4 bg-destructive rounded-full text-[8px] sm:text-[10px] text-white flex items-center justify-center">
+          <Button variant="ghost" size="icon" className="relative">
+            <Bell className="w-5 h-5" />
+            <span className="absolute -top-1 -right-1 w-4 h-4 bg-destructive text-white text-[10px] rounded-full flex items-center justify-center">
               3
             </span>
           </Button>
@@ -126,36 +192,42 @@ export function TopBar() {
           {/* User Menu */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="gap-1 sm:gap-2 px-1 sm:px-2 h-8 sm:h-9">
-                <Avatar className="w-7 h-7 sm:w-8 sm:h-8">
-                  <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-white text-xs sm:text-sm">
-                    {user?.name?.charAt(0) || 'U'}
+              <Button variant="ghost" className="gap-2 h-9">
+                <Avatar className="w-8 h-8">
+                  <AvatarFallback className="bg-primary text-white">
+                    {user?.name?.charAt(0) || "U"}
                   </AvatarFallback>
                 </Avatar>
-                <span className="hidden lg:block text-xs sm:text-sm font-medium max-w-[100px] truncate">
-                  {user?.name || 'User'}
+                <span className="hidden lg:block text-sm truncate max-w-[100px]">
+                  {user?.name}
                 </span>
-                <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 hidden sm:block" />
+                <ChevronDown className="w-4 h-4 hidden sm:block" />
               </Button>
             </DropdownMenuTrigger>
+
             <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuLabel>
-                <div className="flex flex-col">
-                  <span>{user?.name}</span>
-                  <span className="text-xs font-normal text-muted-foreground">{user?.username}</span>
-                </div>
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => navigate('/profile')} className="gap-2 cursor-pointer">
+              <DropdownMenuItem
+                onClick={() => navigate("/profile")}
+                className="gap-2"
+              >
                 <User className="w-4 h-4" />
                 Profile
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => navigate('/settings')} className="gap-2 cursor-pointer">
+
+              <DropdownMenuItem
+                onClick={() => navigate("/settings")}
+                className="gap-2"
+              >
                 <Settings className="w-4 h-4" />
                 Settings
               </DropdownMenuItem>
+
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => setShowLogoutDialog(true)} className="gap-2 cursor-pointer text-destructive focus:text-destructive">
+
+              <DropdownMenuItem
+                onClick={() => setShowLogoutDialog(true)}
+                className="gap-2 text-destructive"
+              >
                 <LogOut className="w-4 h-4" />
                 Logout
               </DropdownMenuItem>
@@ -164,18 +236,32 @@ export function TopBar() {
         </div>
       </header>
 
-      {/* Logout Confirmation Dialog */}
+      {/* Export Progress */}
+      <Dialog open={isExporting}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Exporting</DialogTitle>
+            <DialogDescription>{exportStatus}</DialogDescription>
+          </DialogHeader>
+          <Progress value={exportProgress} className="h-2" />
+        </DialogContent>
+      </Dialog>
+
+      {/* Logout Dialog */}
       <AlertDialog open={showLogoutDialog} onOpenChange={setShowLogoutDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Confirm Logout</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to logout? You will need to login again to access the dashboard.
+              Are you sure you want to logout?
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleLogout} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+            <AlertDialogAction
+              onClick={handleLogout}
+              className="bg-destructive"
+            >
               Logout
             </AlertDialogAction>
           </AlertDialogFooter>

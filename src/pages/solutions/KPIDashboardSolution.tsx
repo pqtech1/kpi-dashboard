@@ -65,18 +65,21 @@ const KPIDashboardSolution = () => {
         <Link to="/pq-offering">
           <Button variant="ghost" className="mb-4 gap-2">
             <ArrowLeft className="w-4 h-4" />
-            Back to PQ Offering
+            Back to Our Services
           </Button>
         </Link>
-        
+
         <div className="flex items-start gap-4">
           <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
             <BarChart3 className="w-8 h-8 text-white" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-foreground">KPI Dashboard Solution</h1>
+            <h1 className="text-3xl font-bold text-foreground">
+              KPI Dashboard Solution
+            </h1>
             <p className="text-lg text-muted-foreground mt-1">
-              Comprehensive production monitoring with real-time KPIs and analytics
+              Comprehensive production monitoring with real-time KPIs and
+              analytics
             </p>
           </div>
         </div>
@@ -97,11 +100,13 @@ const KPIDashboardSolution = () => {
           </CardHeader>
           <CardContent className="prose max-w-none">
             <p className="text-muted-foreground leading-relaxed">
-              Our KPI Dashboard Solution provides a comprehensive, real-time view of your entire jewelry 
-              manufacturing operation. From production tracking to quality metrics, material costs to 
-              workforce efficiency, every critical metric is visualized in intuitive dashboards. This 
-              solution enables data-driven decision making, early problem detection, and continuous 
-              improvement across all production phases.
+              Our KPI Dashboard Solution provides a comprehensive, real-time
+              view of your entire jewelry manufacturing operation. From
+              production tracking to quality metrics, material costs to
+              workforce efficiency, every critical metric is visualized in
+              intuitive dashboards. This solution enables data-driven decision
+              making, early problem detection, and continuous improvement across
+              all production phases.
             </p>
           </CardContent>
         </Card>
@@ -115,9 +120,24 @@ const KPIDashboardSolution = () => {
         className="grid grid-cols-1 md:grid-cols-3 gap-4"
       >
         {[
-          { icon: Eye, title: "Visibility", value: "100%", desc: "Complete operational oversight" },
-          { icon: Clock, title: "Decision Speed", value: "15x", desc: "Faster informed decisions" },
-          { icon: Target, title: "Goal Achievement", value: "94%", desc: "KPI target hit rate" },
+          {
+            icon: Eye,
+            title: "Visibility",
+            value: "100%",
+            desc: "Complete operational oversight",
+          },
+          {
+            icon: Clock,
+            title: "Decision Speed",
+            value: "15x",
+            desc: "Faster informed decisions",
+          },
+          {
+            icon: Target,
+            title: "Goal Achievement",
+            value: "94%",
+            desc: "KPI target hit rate",
+          },
         ].map((benefit) => (
           <Card key={benefit.title} className="text-center">
             <CardContent className="pt-6">
@@ -125,7 +145,9 @@ const KPIDashboardSolution = () => {
                 <benefit.icon className="w-6 h-6 text-primary" />
               </div>
               <h3 className="font-semibold text-foreground">{benefit.title}</h3>
-              <p className="text-3xl font-bold text-primary my-2">{benefit.value}</p>
+              <p className="text-3xl font-bold text-primary my-2">
+                {benefit.value}
+              </p>
               <p className="text-sm text-muted-foreground">{benefit.desc}</p>
             </CardContent>
           </Card>
@@ -151,7 +173,11 @@ const KPIDashboardSolution = () => {
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Bar dataKey="before" name="Without Dashboard" fill="#ef4444" />
+                  <Bar
+                    dataKey="before"
+                    name="Without Dashboard"
+                    fill="#ef4444"
+                  />
                   <Bar dataKey="after" name="With Dashboard" fill="#22c55e" />
                 </BarChart>
               </ResponsiveContainer>
@@ -176,7 +202,9 @@ const KPIDashboardSolution = () => {
               <div className="p-6 rounded-xl bg-red-50 border border-red-200">
                 <div className="flex items-center gap-2 mb-4">
                   <XCircle className="w-6 h-6 text-red-500" />
-                  <h3 className="text-lg font-semibold text-red-700">Without KPI Dashboard</h3>
+                  <h3 className="text-lg font-semibold text-red-700">
+                    Without KPI Dashboard
+                  </h3>
                 </div>
                 <ul className="space-y-3">
                   {[
@@ -185,7 +213,7 @@ const KPIDashboardSolution = () => {
                     "Reactive problem solving",
                     "No real-time visibility",
                     "Manual report compilation",
-                    "Delayed performance insights"
+                    "Delayed performance insights",
                   ].map((item, i) => (
                     <li key={i} className="flex items-start gap-2 text-red-700">
                       <AlertTriangle className="w-4 h-4 mt-1 flex-shrink-0" />
@@ -199,7 +227,9 @@ const KPIDashboardSolution = () => {
               <div className="p-6 rounded-xl bg-green-50 border border-green-200">
                 <div className="flex items-center gap-2 mb-4">
                   <CheckCircle className="w-6 h-6 text-green-500" />
-                  <h3 className="text-lg font-semibold text-green-700">With KPI Dashboard</h3>
+                  <h3 className="text-lg font-semibold text-green-700">
+                    With KPI Dashboard
+                  </h3>
                 </div>
                 <ul className="space-y-3">
                   {[
@@ -208,9 +238,12 @@ const KPIDashboardSolution = () => {
                     "Proactive issue detection",
                     "Complete operational visibility",
                     "Automated report generation",
-                    "Instant performance insights"
+                    "Instant performance insights",
                   ].map((item, i) => (
-                    <li key={i} className="flex items-start gap-2 text-green-700">
+                    <li
+                      key={i}
+                      className="flex items-start gap-2 text-green-700"
+                    >
                       <CheckCircle className="w-4 h-4 mt-1 flex-shrink-0" />
                       <span>{item}</span>
                     </li>
@@ -242,9 +275,27 @@ const KPIDashboardSolution = () => {
                   <YAxis domain={[60, 100]} />
                   <Tooltip />
                   <Legend />
-                  <Area type="monotone" dataKey="efficiency" name="Efficiency" stroke="#3b82f6" fill="#93c5fd" />
-                  <Area type="monotone" dataKey="oee" name="OEE" stroke="#22c55e" fill="#bbf7d0" />
-                  <Area type="monotone" dataKey="quality" name="Quality" stroke="#8b5cf6" fill="#c4b5fd" />
+                  <Area
+                    type="monotone"
+                    dataKey="efficiency"
+                    name="Efficiency"
+                    stroke="#3b82f6"
+                    fill="#93c5fd"
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="oee"
+                    name="OEE"
+                    stroke="#22c55e"
+                    fill="#bbf7d0"
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="quality"
+                    name="Quality"
+                    stroke="#8b5cf6"
+                    fill="#c4b5fd"
+                  />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
@@ -286,18 +337,43 @@ const KPIDashboardSolution = () => {
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {[
-                { title: "Production Tracking", desc: "Real-time output monitoring" },
-                { title: "Quality Metrics", desc: "Defect rate & QC pass rates" },
-                { title: "Material Costing", desc: "Gold, silver, stone tracking" },
-                { title: "OEE Monitoring", desc: "Equipment efficiency metrics" },
-                { title: "Workforce Analytics", desc: "Productivity by department" },
-                { title: "Trend Analysis", desc: "Historical pattern recognition" },
-                { title: "Custom Alerts", desc: "Threshold-based notifications" },
+                {
+                  title: "Production Tracking",
+                  desc: "Real-time output monitoring",
+                },
+                {
+                  title: "Quality Metrics",
+                  desc: "Defect rate & QC pass rates",
+                },
+                {
+                  title: "Material Costing",
+                  desc: "Gold, silver, stone tracking",
+                },
+                {
+                  title: "OEE Monitoring",
+                  desc: "Equipment efficiency metrics",
+                },
+                {
+                  title: "Workforce Analytics",
+                  desc: "Productivity by department",
+                },
+                {
+                  title: "Trend Analysis",
+                  desc: "Historical pattern recognition",
+                },
+                {
+                  title: "Custom Alerts",
+                  desc: "Threshold-based notifications",
+                },
                 { title: "Export Reports", desc: "PDF & Excel generation" },
               ].map((feature) => (
                 <div key={feature.title} className="p-4 bg-muted/50 rounded-xl">
-                  <h4 className="font-semibold text-foreground">{feature.title}</h4>
-                  <p className="text-sm text-muted-foreground">{feature.desc}</p>
+                  <h4 className="font-semibold text-foreground">
+                    {feature.title}
+                  </h4>
+                  <p className="text-sm text-muted-foreground">
+                    {feature.desc}
+                  </p>
                 </div>
               ))}
             </div>
@@ -321,13 +397,34 @@ const KPIDashboardSolution = () => {
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {[
-                { label: "OEE Improvement", value: "+25%", sub: "Overall equipment effectiveness" },
-                { label: "Cost Reduction", value: "18%", sub: "Operational cost savings" },
-                { label: "Quality Score", value: "95%", sub: "First-pass yield" },
-                { label: "Response Time", value: "-85%", sub: "Issue resolution speed" },
+                {
+                  label: "OEE Improvement",
+                  value: "+25%",
+                  sub: "Overall equipment effectiveness",
+                },
+                {
+                  label: "Cost Reduction",
+                  value: "18%",
+                  sub: "Operational cost savings",
+                },
+                {
+                  label: "Quality Score",
+                  value: "95%",
+                  sub: "First-pass yield",
+                },
+                {
+                  label: "Response Time",
+                  value: "-85%",
+                  sub: "Issue resolution speed",
+                },
               ].map((stat) => (
-                <div key={stat.label} className="text-center p-4 bg-white rounded-xl shadow-sm">
-                  <p className="text-2xl font-bold text-primary">{stat.value}</p>
+                <div
+                  key={stat.label}
+                  className="text-center p-4 bg-white rounded-xl shadow-sm"
+                >
+                  <p className="text-2xl font-bold text-primary">
+                    {stat.value}
+                  </p>
                   <p className="font-medium text-foreground">{stat.label}</p>
                   <p className="text-xs text-muted-foreground">{stat.sub}</p>
                 </div>
