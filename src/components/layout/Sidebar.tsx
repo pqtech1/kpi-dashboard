@@ -12,11 +12,17 @@ import {
   LayoutDashboard,
   Package,
   Menu,
-} from "lucide-react";
+  X,
+} from "lucide-react"; // Added X icon
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetClose,
+} from "@/components/ui/sheet"; // Added SheetClose
 
 /* ---------------- MENU CONFIG ---------------- */
 
@@ -215,6 +221,12 @@ export function Sidebar() {
           </Button>
         </SheetTrigger>
         <SheetContent side="left" className="p-0 w-64">
+          {/* Custom Close Button */}
+          <SheetClose className="absolute right-4 top-4 z-50 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
+            <X className="h-6 w-6 text-white" />
+            <span className="sr-only">Close</span>
+          </SheetClose>
+
           <SidebarContent collapsed={false} />
         </SheetContent>
       </Sheet>

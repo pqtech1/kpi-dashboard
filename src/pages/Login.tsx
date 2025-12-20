@@ -57,7 +57,7 @@ const features = [
   },
 ];
 
-const erpLogos = ["Emperor ERP", "GATI ERP", "SAP ERP and other ERP's" ];
+const erpLogos = ["Emperor ERP", "GATI ERP", "SAP ERP"];
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -115,13 +115,13 @@ const Login = () => {
   };
 
   return (
-    <div className="h-screen w-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 flex flex-col lg:flex-row overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 flex flex-col lg:flex-row overflow-auto lg:overflow-hidden">
       {/* Left Side - Product Summary */}
-      <div className="lg:w-1/2 w-full p-4 lg:p-8 xl:p-12 flex flex-col justify-center relative overflow-hidden">
+      <div className="lg:w-1/2 w-full p-4 sm:p-6 lg:p-8 xl:p-12 flex flex-col justify-center relative overflow-hidden">
         {/* Background decorations */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-40 -left-40 w-96 h-96 bg-gradient-to-br from-primary/30 to-accent/20 rounded-full blur-3xl" />
-          <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-gradient-to-tr from-accent/20 to-primary/30 rounded-full blur-3xl" />
+          <div className="absolute -top-20 sm:-top-40 -left-20 sm:-left-40 w-60 sm:w-80 md:w-96 h-60 sm:h-80 md:h-96 bg-gradient-to-br from-primary/30 to-accent/20 rounded-full blur-3xl" />
+          <div className="absolute -bottom-20 sm:-bottom-40 -right-20 sm:-right-40 w-60 sm:w-80 md:w-96 h-60 sm:h-80 md:h-96 bg-gradient-to-tr from-accent/20 to-primary/30 rounded-full blur-3xl" />
         </div>
 
         <motion.div
@@ -133,27 +133,27 @@ const Login = () => {
           {/* Clickable Logo */}
           <motion.div
             onClick={() => openLink("https://techupgrad.in/kpi")}
-            className="flex items-center gap-3 mb-6 lg:mb-8 cursor-pointer group w-fit"
+            className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6 lg:mb-8 cursor-pointer group w-fit"
           >
             <div className="flex items-center gap-2">
               <img
                 src="pq-jewel-pulse.png"
                 alt="Jewel INTEGRA Logo"
-                className="h-10 w-10 object-contain"
+                className="h-8 w-8 sm:h-10 sm:w-10 object-contain"
               />
-              <span className="text-2xl font-bold text-sidebar-foreground whitespace-nowrap drop-shadow-[0_0_6px_rgba(255,215,0,0.6)]">
+              <span className="text-lg sm:text-xl md:text-2xl font-bold text-sidebar-foreground whitespace-nowrap drop-shadow-[0_0_6px_rgba(255,215,0,0.6)]">
                 Jewel INTEGRA
               </span>
             </div>
           </motion.div>
 
           {/* Tagline */}
-          <div className="mb-6 lg:mb-10">
+          <div className="mb-4 sm:mb-6 lg:mb-10">
             <motion.h2
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2 }}
-              className="text-2xl lg:text-3xl xl:text-4xl font-bold text-white mb-3 lg:mb-4 leading-tight"
+              className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-white mb-2 sm:mb-3 lg:mb-4 leading-tight"
             >
               Precision KPIs.
               <br />
@@ -165,31 +165,31 @@ const Login = () => {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3 }}
-              className="text-slate-300 text-sm lg:text-lg max-w-lg"
+              className="text-slate-300 text-sm sm:text-base lg:text-lg max-w-lg"
             >
               Enterprise-grade production monitoring with custom integrations
               for jewelry manufacturing excellence.
             </motion.p>
           </div>
 
-          {/* Features */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 lg:gap-4 mb-6 lg:mb-10">
+          {/* Features Grid - Responsive layout */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 lg:gap-4 mb-4 sm:mb-6 lg:mb-10">
             {features.map((feature, index) => (
               <motion.div
                 key={feature.title}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 + index * 0.1 }}
-                className="flex items-start gap-2 lg:gap-3 p-3 lg:p-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-colors"
+                className="flex items-start gap-2 sm:gap-3 p-3 sm:p-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-colors"
               >
-                <div className="p-1.5 lg:p-2 rounded-lg bg-gradient-to-br from-primary/20 to-accent/20">
-                  <feature.icon className="w-4 h-4 lg:w-5 lg:h-5 text-white" />
+                <div className="p-1 sm:p-1.5 lg:p-2 rounded-lg bg-gradient-to-br from-primary/20 to-accent/20 shrink-0">
+                  <feature.icon className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-white text-xs lg:text-sm truncate">
+                  <h3 className="font-semibold text-white text-xs sm:text-sm truncate">
                     {feature.title}
                   </h3>
-                  <p className="text-slate-200 text-xs leading-relaxed">
+                  <p className="text-slate-200 text-xs leading-relaxed line-clamp-2">
                     {feature.description}
                   </p>
                 </div>
@@ -197,100 +197,105 @@ const Login = () => {
             ))}
           </div>
 
-          {/* ERP Integration Logos - All on same line */}
+          {/* ERP Integration Logos */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8 }}
-            className="flex items-center flex-wrap gap-1 lg:gap-2"
+            className="space-y-2"
           >
-            <span className="text-slate-200 text-xs lg:text-sm mr-1 lg:mr-2">
+            <span className="text-slate-200 text-xs sm:text-sm">
               Trusted integrations with:
             </span>
-            {erpLogos.map((logo, index) => (
-              <motion.div
-                key={logo}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.9 + index * 0.1 }}
-                className=" text-white text-xs lg:text-sm font-medium whitespace-nowrap"
-              >
-                {logo}
-              </motion.div>
-            ))}
+            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+              {erpLogos.map((logo, index) => (
+                <motion.div
+                  key={logo}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.9 + index * 0.1 }}
+                  className="px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg bg-white/5 border border-white/10 text-white text-xs sm:text-sm font-medium whitespace-nowrap"
+                >
+                  {logo}
+                </motion.div>
+              ))}
+            </div>
           </motion.div>
         </motion.div>
       </div>
 
       {/* Right Side - Login Form */}
-      <div className="lg:w-1/2 w-full p-4 lg:p-8 xl:p-12 flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 lg:rounded-l-[2rem] xl:rounded-l-[3rem]">
+      <div className="lg:w-1/2 w-full p-4 sm:p-6 lg:p-8 xl:p-12 flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 lg:rounded-l-3xl xl:rounded-l-[3rem]">
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6 }}
           className="w-full max-w-md"
         >
-          <Card className="border-0 shadow-2xl bg-white/80 backdrop-blur-xl">
-            <CardContent className="p-6 lg:p-8">
-              <div className="text-center mb-6 lg:mb-8">
-                <h2 className="text-xl lg:text-2xl font-bold text-foreground mb-2">
+          <Card className="border-0 shadow-xl sm:shadow-2xl bg-white/80 sm:bg-white/80 backdrop-blur-sm sm:backdrop-blur-xl">
+            <CardContent className="p-4 sm:p-6 lg:p-8">
+              <div className="text-center mb-4 sm:mb-6 lg:mb-8">
+                <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground mb-1 sm:mb-2">
                   Welcome Back
                 </h2>
-                <p className="text-muted-foreground text-sm lg:text-base">
+                <p className="text-muted-foreground text-xs sm:text-sm lg:text-base">
                   Sign in to access your dashboard
                 </p>
               </div>
 
-              <form onSubmit={handleLogin} className="space-y-4 lg:space-y-5">
-                {/* Username Field - Label and Input on same line */}
+              <form
+                onSubmit={handleLogin}
+                className="space-y-3 sm:space-y-4 lg:space-y-5"
+              >
+                {/* Username Field - Stacked on mobile, inline on larger screens */}
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.3 }}
-                  className="flex items-center space-x-4"
+                  className="space-y-1 sm:space-y-0 sm:flex sm:items-center sm:space-x-4"
                 >
                   <Label
                     htmlFor="username"
-                    className="text-sm font-medium text-foreground w-24 flex-shrink-0"
+                    className="text-xs sm:text-sm font-medium text-foreground sm:w-24 sm:flex-shrink-0 block"
                   >
                     Username
                   </Label>
                   <div className="relative flex-1">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 lg:w-5 lg:h-5 text-muted-foreground" />
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-muted-foreground" />
                     <Input
                       id="username"
                       type="text"
                       placeholder="Enter your username"
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
-                      className="pl-10 lg:pl-11 h-11 lg:h-12 bg-white border-border/50 focus:border-primary focus:ring-primary/20 transition-all text-sm lg:text-base"
+                      className="pl-8 sm:pl-10 lg:pl-11 h-9 sm:h-10 lg:h-12 bg-white border-border/50 focus:border-primary focus:ring-primary/20 transition-all text-sm sm:text-base"
                       required
                     />
                   </div>
                 </motion.div>
 
-                {/* Password Field - Label and Input on same line */}
+                {/* Password Field - Stacked on mobile, inline on larger screens */}
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.4 }}
-                  className="flex items-center space-x-4"
+                  className="space-y-1 sm:space-y-0 sm:flex sm:items-center sm:space-x-4"
                 >
                   <Label
                     htmlFor="password"
-                    className="text-sm font-medium text-foreground w-24 flex-shrink-0"
+                    className="text-xs sm:text-sm font-medium text-foreground sm:w-24 sm:flex-shrink-0 block"
                   >
                     Password
                   </Label>
                   <div className="relative flex-1">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 lg:w-5 lg:h-5 text-muted-foreground" />
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-muted-foreground" />
                     <Input
                       id="password"
                       type={showPassword ? "text" : "password"}
                       placeholder="Enter your password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="pl-10 lg:pl-11 pr-10 lg:pr-11 h-11 lg:h-12 bg-white border-border/50 focus:border-primary focus:ring-primary/20 transition-all text-sm lg:text-base"
+                      className="pl-8 sm:pl-10 lg:pl-11 pr-8 sm:pr-10 lg:pr-11 h-9 sm:h-10 lg:h-12 bg-white border-border/50 focus:border-primary focus:ring-primary/20 transition-all text-sm sm:text-base"
                       required
                     />
                     <button
@@ -299,9 +304,9 @@ const Login = () => {
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                     >
                       {showPassword ? (
-                        <EyeOff className="w-4 h-4 lg:w-5 lg:h-5" />
+                        <EyeOff className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5" />
                       ) : (
-                        <Eye className="w-4 h-4 lg:w-5 lg:h-5" />
+                        <Eye className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5" />
                       )}
                     </button>
                   </div>
@@ -311,7 +316,7 @@ const Login = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.5 }}
-                  className="flex justify-end"
+                  className="flex justify-end pt-1"
                 >
                   <Dialog
                     open={resetDialogOpen}
@@ -320,12 +325,12 @@ const Login = () => {
                     <DialogTrigger asChild>
                       <button
                         type="button"
-                        className="text-xs lg:text-sm text-primary hover:text-primary/80 font-medium transition-colors"
+                        className="text-xs sm:text-sm text-primary hover:text-primary/80 font-medium transition-colors"
                       >
                         Forgot password?
                       </button>
                     </DialogTrigger>
-                    <DialogContent className="sm:max-w-md">
+                    <DialogContent className="sm:max-w-md max-w-[calc(100vw-2rem)] mx-2">
                       <DialogHeader>
                         <DialogTitle>Reset Password</DialogTitle>
                         <DialogDescription>
@@ -365,7 +370,7 @@ const Login = () => {
                   <Button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full h-11 lg:h-12 bg-gradient-to-r from-primary to-accent hover:opacity-90 text-white font-semibold text-sm lg:text-base shadow-lg shadow-primary/30 transition-all duration-300 group"
+                    className="w-full h-9 sm:h-10 lg:h-12 bg-gradient-to-r from-primary to-accent hover:opacity-90 text-white font-semibold text-sm sm:text-base shadow-lg shadow-primary/30 transition-all duration-300 group"
                   >
                     {isLoading ? (
                       <motion.div
@@ -375,28 +380,28 @@ const Login = () => {
                           repeat: Infinity,
                           ease: "linear",
                         }}
-                        className="w-4 h-4 lg:w-5 lg:h-5 border-2 border-white/30 border-t-white rounded-full"
+                        className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-white/30 border-t-white rounded-full"
                       />
                     ) : (
                       <>
                         Sign In
-                        <ArrowRight className="ml-2 w-4 h-4 lg:w-5 lg:h-5 group-hover:translate-x-1 transition-transform" />
+                        <ArrowRight className="ml-2 w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 group-hover:translate-x-1 transition-transform" />
                       </>
                     )}
                   </Button>
                 </motion.div>
               </form>
 
-              {/* Developer Info Section - Compact Layout */}
+              {/* Developer Info Section */}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.7 }}
-                className="mt-6 lg:mt-8 pt-4 lg:pt-6 border-t border-border/50"
+                className="mt-4 sm:mt-6 lg:mt-8 pt-3 sm:pt-4 lg:pt-6 border-t border-border/50"
               >
-                <div className="space-y-3">
+                <div className="space-y-2 sm:space-y-3">
                   {/* Developer by line */}
-                  <div className="flex items-center justify-center gap-2">
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2">
                     <span className="text-xs text-muted-foreground">
                       Developed by
                     </span>
@@ -405,36 +410,36 @@ const Login = () => {
                       onClick={() => openLink("https://positivequadrant.in")}
                       className="cursor-pointer"
                     >
-                      <span className="text-sm uppercase font-semibold text-primary hover:text-primary/80 transition-colors">
+                      <span className="text-xs sm:text-sm uppercase font-semibold text-primary hover:text-primary/80 transition-colors text-center">
                         Positive Quadrant Technologies LLP
                       </span>
                     </motion.div>
                   </div>
 
-                  {/* Contact info on same line */}
-                  <div className="flex items-center justify-center gap-4 flex-wrap">
+                  {/* Contact info - Stack on mobile, row on larger */}
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 flex-wrap">
                     <a
                       href="tel:7219623991"
-                      className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary transition-colors"
+                      className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors"
                     >
                       <Phone className="w-3 h-3" />
                       <span>7219623991</span>
                     </a>
                     <a
                       href="mailto:info@positivequadrant.in"
-                      className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary transition-colors"
+                      className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors"
                     >
                       <Mail className="w-3 h-3" />
                       <span>info@positivequadrant.in</span>
                     </a>
                   </div>
 
-                  {/* Please Visit + Links on same line */}
-                  <div className="flex items-center justify-center gap-3 flex-wrap">
+                  {/* Please Visit + Links */}
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 flex-wrap">
                     <span className="text-xs text-muted-foreground">
                       Please Visit:
                     </span>
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap justify-center gap-2">
                       <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
@@ -443,9 +448,12 @@ const Login = () => {
                             "https://www.positivequadrant.in/ai-solutions-for-jewelery-industry"
                           )
                         }
-                        className="inline-flex items-center gap-1 px-3 py-1 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary text-xs font-medium transition-colors"
+                        className="inline-flex items-center gap-1 px-2 sm:px-3 py-1 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary text-xs font-medium transition-colors"
                       >
-                        Jewelry AI Solutions
+                        <span className="hidden sm:inline">
+                          Jewelry AI Solutions
+                        </span>
+                        <span className="sm:hidden">AI Solutions</span>
                         <ExternalLink className="w-3 h-3" />
                       </motion.button>
 
@@ -457,7 +465,7 @@ const Login = () => {
                             "https://www.positivequadrant.in/projects-and-portfolios"
                           )
                         }
-                        className="inline-flex items-center gap-1 px-3 py-1 rounded-lg bg-accent/10 hover:bg-accent/20 text-accent text-xs font-medium transition-colors"
+                        className="inline-flex items-center gap-1 px-2 sm:px-3 py-1 rounded-lg bg-accent/10 hover:bg-accent/20 text-accent text-xs font-medium transition-colors"
                       >
                         Portfolio
                         <ExternalLink className="w-3 h-3" />
