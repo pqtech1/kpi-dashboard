@@ -137,7 +137,7 @@ const Login = () => {
           >
             <div className="flex items-center gap-2">
               <img
-                src="/pq-jewel-pulse.png"
+                src="pq-jewel-pulse.png"
                 alt="Jewel INTEGRA Logo"
                 className="h-10 w-10 object-contain"
               />

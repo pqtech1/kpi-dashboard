@@ -61,7 +61,7 @@ function SidebarContent({
             onClick={() => openLink("https://techupgrad.in/kpi/")}
           >
             <img
-              src="/pq-jewel-pulse.png"
+              src="pq-jewel-pulse.png"
               alt="Jewel INTEGRA Logo"
               className="h-8 w-8 object-contain"
             />
@@ -176,7 +176,7 @@ function SidebarContent({
         onClick={() => openLink("https://techupgrad.in/kpi")}
       >
         <img
-          src="/pq-logo.png"
+          src="pq-logo.png"
           alt="Company Logo"
           className={cn(
             "object-contain transition-all",
