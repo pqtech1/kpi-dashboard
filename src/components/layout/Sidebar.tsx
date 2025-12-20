@@ -61,7 +61,7 @@ function SidebarContent({
             onClick={() => openLink("https://techupgrad.in/kpi/")}
           >
             <img
-              src="/pq-jewel-pulse.png"
+              src={`${import.meta.env.BASE_URL}pq-jewel-pulse.png`}
               alt="Jewel INTEGRA Logo"
               className="h-8 w-8 object-contain"
             />
@@ -71,7 +71,7 @@ function SidebarContent({
           </div>
         ) : (
           <img
-            src="/pq-jewel-pulse.png"
+            src={`${import.meta.env.BASE_URL}pq-jewel-pulse.png`}
             alt="Logo"
             className="h-8 w-8 object-contain mx-auto"
           />
@@ -176,7 +176,7 @@ function SidebarContent({
         onClick={() => openLink("https://techupgrad.in/kpi")}
       >
         <img
-          src="/pq-logo.png"
+          src={`${import.meta.env.BASE_URL}pq-logo.png`}
           alt="Company Logo"
           className={cn(
             "object-contain transition-all",
