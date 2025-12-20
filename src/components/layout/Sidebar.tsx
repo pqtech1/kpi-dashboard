@@ -185,8 +185,8 @@ function SidebarContent({
           src={`${import.meta.env.BASE_URL}pq-logo.png`}
           alt="Company Logo"
           className={cn(
-            "object-contain transition-all",
-            collapsed ? "h-6 w-6" : "h-8"
+            "object-contain transition-all p-4",
+            collapsed ? "h-6 w-6" : "h-100"
           )}
         />
       </div>
