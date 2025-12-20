@@ -10,4 +10,10 @@ export default defineConfig({
     port: 8080,
     allowedHosts: ["techupgrad.in", "www.techupgrad.in"],
   },
+  // Add this resolve section:
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
 });
