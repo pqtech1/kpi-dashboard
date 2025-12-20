@@ -73,7 +73,7 @@ const PQOffering = () => {
       >
         <div className="flex items-center justify-center gap-4 mb-3">
           <img
-            src="/cropped-pq-logo.png"
+            src={`${import.meta.env.BASE_URL}cropped-pq-logo.png`}
             alt="Positive Quadrant"
             className="h-12 w-12 object-contain"
           />
