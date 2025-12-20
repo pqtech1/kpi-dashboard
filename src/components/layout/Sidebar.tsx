@@ -286,14 +286,21 @@ function SidebarContent({
         className="h-16 shrink-0 flex items-center justify-center border-t border-sidebar-border cursor-pointer bg-white/90 hover:bg-white transition"
         onClick={() => openLink("https://positivequadrant.in/")}
       >
-        <img
-          src={`${import.meta.env.BASE_URL}pq-logo.png`}
-          alt="Company Logo"
-          className={cn(
-            "object-contain transition-all p-4",
-            collapsed ? "h-6 w-6" : "h-100"
-          )}
-        />
+        {!collapsed ? (
+          // Full logo when expanded
+          <img
+            src={`${import.meta.env.BASE_URL}pq-logo.png`}
+            alt="Positive Quadrant Logo"
+            className="h-10 w-auto object-contain px-2"
+          />
+        ) : (
+          // Cropped logo when collapsed
+          <img
+            src={`${import.meta.env.BASE_URL}cropped-pq-logo.png`}
+            alt="PQ Logo"
+            className="h-8 w-8 object-contain"
+          />
+        )}
       </div>
     </div>
   );
