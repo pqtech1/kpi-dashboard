@@ -13,7 +13,10 @@ import {
   Package,
   Menu,
   X,
-} from "lucide-react"; // Added X icon
+  Building2,
+  Database,
+  Link2,
+} from "lucide-react";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -22,7 +25,7 @@ import {
   SheetContent,
   SheetTrigger,
   SheetClose,
-} from "@/components/ui/sheet"; // Added SheetClose
+} from "@/components/ui/sheet";
 
 /* ---------------- MENU CONFIG ---------------- */
 
@@ -41,6 +44,13 @@ const menuItems = [
     path: "/pq-offering",
     type: "service",
   },
+];
+
+const erpIntegrations = [
+  { name: "Emperor ERP", color: "from-blue-500 to-blue-600" },
+  { name: "GATI ERP", color: "from-emerald-500 to-emerald-600" },
+  { name: "SAP ERP", color: "from-purple-500 to-purple-600" },
+  { name: "Other ERP's", color: "from-gray-500 to-gray-600" },
 ];
 
 const openLink = (url: string) =>
@@ -174,12 +184,107 @@ function SidebarContent({
               );
             })}
         </div>
+
+        {/* ERP INTEGRATIONS SECTION - Only show when not collapsed */}
+        {!collapsed && (
+          <div className="mt-6 pt-4 border-t border-sidebar-border">
+            <div className="px-3">
+              {/* Enhanced Heading */}
+              <div className="mb-3">
+                <div className="flex items-center gap-2 mb-1">
+                  <Link2 className="w-4 h-4 text-primary/80" />
+                  <span className="text-xs font-medium uppercase tracking-wider text-white/90">
+                    Custom Integrations
+                  </span>
+                </div>
+                <div className="h-px w-full bg-gradient-to-r from-primary/30 via-primary/20 to-transparent mb-2" />
+                <p className="text-xs text-white/60 italic">
+                  Seamless connectivity with:
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                {erpIntegrations.map((erp, index) => (
+                  <div
+                    key={erp.name}
+                    className={cn(
+                      "flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200",
+                      "bg-gradient-to-r from-sidebar-accent/20 to-transparent",
+                      "hover:bg-sidebar-accent/40 hover:scale-[1.02]",
+                      "border border-white/10 hover:border-primary/30"
+                    )}
+                  >
+                    {/* Color indicator */}
+                    <div
+                      className={`w-2 h-2 rounded-full bg-gradient-to-r ${erp.color}`}
+                    />
+
+                    {/* ERP Name with gradient text */}
+                    <span
+                      className={cn(
+                        "text-sm font-medium whitespace-nowrap",
+                        erp.name === "Emperor ERP" &&
+                          "bg-gradient-to-r from-blue-400 to-blue-300 bg-clip-text text-transparent",
+                        erp.name === "GATI ERP" &&
+                          "bg-gradient-to-r from-emerald-400 to-emerald-300 bg-clip-text text-transparent",
+                        erp.name === "SAP ERP" &&
+                          "bg-gradient-to-r from-purple-400 to-purple-300 bg-clip-text text-transparent",
+                        erp.name === "Other ERP's" &&
+                          "bg-gradient-to-r from-gray-400 to-gray-300 bg-clip-text text-transparent"
+                      )}
+                    >
+                      {erp.name}
+                    </span>
+
+                    {/* Integration badge for last item */}
+                    {erp.name === "Other ERP's" && (
+                      <span className="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-white/90 text-primary/100 border border-primary/30">
+                        Integration
+                      </span>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              {/* Optional decorative element */}
+              <div className="mt-3 pt-3 border-t border-white/10">
+                <div className="flex items-center justify-center gap-1 text-xs text-white/60">
+                  <Database className="w-3 h-3" />
+                  <span>Real-time Data Sync</span>
+                  <Database className="w-3 h-3" />
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Collapsed view for ERP integrations */}
+        {collapsed && (
+          <div className="mt-6 pt-4 border-t border-sidebar-border">
+            <div className="flex items-center justify-center mb-3">
+              <Link2 className="w-5 h-5 text-primary/80" />
+            </div>
+            <div className="space-y-1">
+              {erpIntegrations.map((erp, index) => (
+                <div
+                  key={erp.name}
+                  className="flex justify-center"
+                  title={erp.name}
+                >
+                  <div
+                    className={`w-2 h-2 rounded-full bg-gradient-to-r ${erp.color}`}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </nav>
 
       {/* ---------- BOTTOM LOGO ---------- */}
       <div
         className="h-16 shrink-0 flex items-center justify-center border-t border-sidebar-border cursor-pointer bg-white/90 hover:bg-white transition"
-        onClick={() => openLink("https://techupgrad.in/kpi")}
+        onClick={() => openLink("https://positivequadrant.in/")}
       >
         <img
           src={`${import.meta.env.BASE_URL}pq-logo.png`}

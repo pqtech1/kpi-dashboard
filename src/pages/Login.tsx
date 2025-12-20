@@ -43,7 +43,8 @@ const features = [
   {
     icon: Database,
     title: "ERP Integration",
-    description: "Seamless connectivity with Emperor, GATI, SAP ERP",
+    description:
+      "Seamless connectivity with Emperor, GATI, SAP ERP etc.",
   },
   {
     icon: Shield,
@@ -57,7 +58,11 @@ const features = [
   },
 ];
 
-const erpLogos = ["Emperor ERP", "GATI ERP", "SAP ERP"];
+const erpLogos = [
+  "Emperor ERP",
+  "GATI ERP",
+  "SAP ERP and other ERP's integrations",
+];
 
 const Login = () => {
   const [username, setUsername] = useState("");
