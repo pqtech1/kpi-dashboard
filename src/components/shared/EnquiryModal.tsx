@@ -33,7 +33,8 @@ export default function EnquiryModal() {
     setLoading(true);
 
     try {
-      // IMPORTANT: Use /api/enquiry (not /crm/api/enquiry)
+      // IMPORTANT: URL is /api/enquiry (not /crm/api/enquiry)
+      // Laravel 12 API routes don't need /crm/ prefix
       const res = await fetch("https://techupgrad.in/api/enquiry", {
         method: "POST",
         headers: {
@@ -45,6 +46,7 @@ export default function EnquiryModal() {
           email: form.email,
           phone: form.phone,
           message: form.message,
+          time: new Date().toLocaleString(),
         }),
       });
 
