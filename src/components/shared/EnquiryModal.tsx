@@ -34,7 +34,7 @@ export default function EnquiryModal() {
 
     try {
       // Try web route first (no API prefix)
-      const res = await fetch("https://techupgrad.in/submit-enquiry", {
+      const res = await fetch("https://techupgrad.in/crm/submit-enquiry", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
