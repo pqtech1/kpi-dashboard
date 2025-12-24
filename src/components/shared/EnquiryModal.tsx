@@ -33,13 +33,17 @@ export default function EnquiryModal() {
     setLoading(true);
 
     try {
-      // Call YOUR Laravel API (no CORS issues since same domain)
-      const res = await fetch("https://techupgrad.in/api/v1/enquiries", {
+      // Try web route first (no API prefix)
+      const res = await fetch("https://techupgrad.in/submit-enquiry", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          // Optional: Add CSRF token if needed
-          // "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+          Accept: "application/json",
+          // CSRF token for Laravel web routes
+          "X-CSRF-TOKEN":
+            document
+              .querySelector('meta[name="csrf-token"]')
+              ?.getAttribute("content") || "",
         },
         body: JSON.stringify({
           name: form.name,
@@ -47,9 +51,16 @@ export default function EnquiryModal() {
           phone: form.phone,
           message: form.message,
           source: "Jewel INTEGRA Website",
-          send_confirmation: true, // Optional: send auto-reply to customer
         }),
       });
+
+      // Check if response is JSON
+      const contentType = res.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        const text = await res.text();
+        console.error("Non-JSON response:", text.substring(0, 200));
+        throw new Error("Server returned non-JSON response");
+      }
 
       const data = await res.json();
 
@@ -67,7 +78,6 @@ export default function EnquiryModal() {
       setLoading(false);
     }
   };
-
   return (
     <>
       <Button onClick={() => setOpen(true)}>Enquiry</Button>
