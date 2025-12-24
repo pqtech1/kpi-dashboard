@@ -33,30 +33,21 @@ export default function EnquiryModal() {
     setLoading(true);
 
     try {
-      // Try web route first (no API prefix)
-       const res = await fetch("https://techupgrad.in/crm/submit-enquiry", {
-         method: "POST",
-         headers: {
-           "Content-Type": "application/json",
-           Accept: "application/json",
-           // Remove X-CSRF-TOKEN header
-         },
-         body: JSON.stringify({
-           name: form.name,
-           email: form.email,
-           phone: form.phone,
-           message: form.message,
-           source: "Jewel INTEGRA Website",
-         }),
-       });
-
-      // Check if response is JSON
-      const contentType = res.headers.get("content-type");
-      if (!contentType || !contentType.includes("application/json")) {
-        const text = await res.text();
-        console.error("Non-JSON response:", text.substring(0, 200));
-        throw new Error("Server returned non-JSON response");
-      }
+      // IMPORTANT: Use /crm/api/enquiry (include /crm/)
+      const res = await fetch("https://techupgrad.in/crm/api/enquiry", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          message: form.message,
+          source: "Jewel INTEGRA Website",
+        }),
+      });
 
       const data = await res.json();
 
@@ -74,6 +65,8 @@ export default function EnquiryModal() {
       setLoading(false);
     }
   };
+
+  
   return (
     <>
       <Button onClick={() => setOpen(true)}>Enquiry</Button>
