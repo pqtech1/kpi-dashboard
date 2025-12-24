@@ -33,8 +33,8 @@ export default function EnquiryModal() {
     setLoading(true);
 
     try {
-      // IMPORTANT: Use /crm/api/enquiry (include /crm/)
-      const res = await fetch("https://techupgrad.in/crm/api/enquiry", {
+      // IMPORTANT: Use /api/enquiry (not /crm/api/enquiry)
+      const res = await fetch("https://techupgrad.in/api/enquiry", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -45,7 +45,6 @@ export default function EnquiryModal() {
           email: form.email,
           phone: form.phone,
           message: form.message,
-          source: "Jewel INTEGRA Website",
         }),
       });
 
@@ -65,8 +64,6 @@ export default function EnquiryModal() {
       setLoading(false);
     }
   };
-
-  
   return (
     <>
       <Button onClick={() => setOpen(true)}>Enquiry</Button>
