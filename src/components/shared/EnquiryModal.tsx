@@ -34,25 +34,21 @@ export default function EnquiryModal() {
 
     try {
       // Try web route first (no API prefix)
-      const res = await fetch("https://techupgrad.in/crm/submit-enquiry", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          // CSRF token for Laravel web routes
-          "X-CSRF-TOKEN":
-            document
-              .querySelector('meta[name="csrf-token"]')
-              ?.getAttribute("content") || "",
-        },
-        body: JSON.stringify({
-          name: form.name,
-          email: form.email,
-          phone: form.phone,
-          message: form.message,
-          source: "Jewel INTEGRA Website",
-        }),
-      });
+       const res = await fetch("https://techupgrad.in/crm/submit-enquiry", {
+         method: "POST",
+         headers: {
+           "Content-Type": "application/json",
+           Accept: "application/json",
+           // Remove X-CSRF-TOKEN header
+         },
+         body: JSON.stringify({
+           name: form.name,
+           email: form.email,
+           phone: form.phone,
+           message: form.message,
+           source: "Jewel INTEGRA Website",
+         }),
+       });
 
       // Check if response is JSON
       const contentType = res.headers.get("content-type");
