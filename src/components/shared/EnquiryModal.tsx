@@ -32,38 +32,37 @@ export default function EnquiryModal() {
 
     setLoading(true);
 
-    const emailBody = {
-      to: "naimishdwivedi183@gmail.com",
-      subject: "Jewel INTEGRA New Enquiry Received",
-      message: `
-        <h3>New Enquiry</h3>
-        <p><b>Name:</b> ${form.name}</p>
-        <p><b>Email:</b> ${form.email}</p>
-        <p><b>Phone:</b> ${form.phone}</p>
-        <p><b>Message:</b> ${form.message}</p>
-      `,
-    };
-
     try {
-      const res = await fetch(
-        "https://positivequadrant.in/emailapi/send_email",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-api-key": "pq_api_zyxcba@109256",
-          },
-          body: JSON.stringify(emailBody),
-        }
-      );
+      // Call YOUR Laravel API (no CORS issues since same domain)
+      const res = await fetch("https://techupgrad.in/api/v1/enquiries", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          // Optional: Add CSRF token if needed
+          // "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+        },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          message: form.message,
+          source: "Jewel INTEGRA Website",
+          send_confirmation: true, // Optional: send auto-reply to customer
+        }),
+      });
 
-      if (!res.ok) throw new Error("Failed");
+      const data = await res.json();
 
-      toast.success("Enquiry sent successfully");
+      if (!res.ok) {
+        throw new Error(data.message || "Failed to submit enquiry");
+      }
+
+      toast.success("Enquiry sent successfully! We'll contact you soon.");
       setOpen(false);
       setForm({ name: "", email: "", phone: "", message: "" });
     } catch (err) {
-      toast.error("Failed to send enquiry");
+      console.error("Enquiry error:", err);
+      toast.error(err.message || "Failed to send enquiry. Please try again.");
     } finally {
       setLoading(false);
     }
