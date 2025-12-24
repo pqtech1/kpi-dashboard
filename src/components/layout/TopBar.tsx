@@ -142,7 +142,7 @@ export function TopBar() {
         {/* Right */}
         <div className="flex items-center gap-2 sm:gap-4">
           {/* Contact Us */}
-          <Button
+          {/* <Button
             variant="outline"
             size="sm"
             onClick={() => openLink("https://positivequadrant.in/contact-us")}
@@ -158,7 +158,7 @@ export function TopBar() {
             className="sm:hidden"
           >
             <User className="w-4 h-4" />
-          </Button>
+          </Button> */}
 
           {/* Export Dropdown */}
           <DropdownMenu>

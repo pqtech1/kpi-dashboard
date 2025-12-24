@@ -234,7 +234,7 @@ const Login = () => {
         {/* <Enquiry /> */}
 
         {/* Contact Us Button - Top Right */}
-        <motion.button
+        {/* <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => openLink("https://positivequadrant.in/contact-us")}
@@ -244,7 +244,7 @@ const Login = () => {
         >
           Contact Us
           <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
-        </motion.button>
+        </motion.button> */}
 
         <motion.div
           initial={{ opacity: 0, x: 20 }}
