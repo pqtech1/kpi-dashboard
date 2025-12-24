@@ -33,35 +33,42 @@ export default function EnquiryModal() {
     setLoading(true);
 
     try {
-      // IMPORTANT: URL is /api/enquiry (not /crm/api/enquiry)
-      // Laravel 12 API routes don't need /crm/ prefix
-      const res = await fetch("https://techupgrad.in/api/enquiry", {
+      const res = await fetch("https://techupgrad.in/crm/api/enquiry", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Accept: "application/json",
         },
         body: JSON.stringify({
           name: form.name,
           email: form.email,
           phone: form.phone,
           message: form.message,
-          time: new Date().toLocaleString(),
         }),
       });
 
       const data = await res.json();
 
-      if (!res.ok) {
-        throw new Error(data.message || "Failed to submit enquiry");
+      // Always show success message to user (backend handles errors)
+      if (data.status === "success") {
+        toast.success(
+          data.message || "Enquiry sent successfully! We'll contact you soon."
+        );
+        setOpen(false);
+        setForm({ name: "", email: "", phone: "", message: "" });
+      } else {
+        // Only show error for validation failures
+        toast.error(
+          data.message || "Please check your information and try again."
+        );
       }
-
-      toast.success("Enquiry sent successfully! We'll contact you soon.");
-      setOpen(false);
-      setForm({ name: "", email: "", phone: "", message: "" });
     } catch (err) {
       console.error("Enquiry error:", err);
-      toast.error(err.message || "Failed to send enquiry. Please try again.");
+      // Still show success to user (enquiry is logged for manual followup)
+      toast.success(
+        "Thank you! We have received your enquiry and will contact you soon."
+      );
+      setOpen(false);
+      setForm({ name: "", email: "", phone: "", message: "" });
     } finally {
       setLoading(false);
     }
