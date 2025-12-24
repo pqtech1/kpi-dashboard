@@ -231,7 +231,7 @@ const Login = () => {
 
       {/* Right Side - Login Form */}
       <div className="lg:w-1/2 w-full p-4 sm:p-6 lg:p-8 xl:p-12 flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 lg:rounded-l-3xl xl:rounded-l-[3rem]">
-        <Enquiry />
+        {/* <Enquiry /> */}
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}

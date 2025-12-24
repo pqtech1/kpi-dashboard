@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import { toast } from "sonner";
+import { User, Mail, MessageCircle, Phone } from "lucide-react";
 
 export default function EnquiryModal() {
   const [open, setOpen] = useState(false);
@@ -73,41 +74,71 @@ export default function EnquiryModal() {
       <Button onClick={() => setOpen(true)}>Enquiry</Button>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle>Enquiry Form</DialogTitle>
+        <DialogContent className="max-w-md rounded-xl p-6 bg-white shadow-xl border border-gray-200">
+          <DialogHeader className="text-center mb-4">
+            <DialogTitle className="text-2xl font-bold">
+              Enquiry Form
+            </DialogTitle>
           </DialogHeader>
 
           <div className="space-y-4">
-            <Input
-              placeholder="Name"
-              value={form.name}
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
-            />
+            <div className="relative">
+              <User
+                className="absolute top-1/2 left-3 -translate-y-1/2 text-gray-400"
+                size={18}
+              />
+              <Input
+                placeholder="Name"
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                className="pl-10"
+              />
+            </div>
 
-            <Input
-              placeholder="Email"
-              type="email"
-              value={form.email}
-              onChange={(e) => setForm({ ...form, email: e.target.value })}
-            />
+            <div className="relative">
+              <Mail
+                className="absolute top-1/2 left-3 -translate-y-1/2 text-gray-400"
+                size={18}
+              />
+              <Input
+                placeholder="Email"
+                type="email"
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
+                className="pl-10"
+              />
+            </div>
 
-            <PhoneInput
-              international
-              defaultCountry="IN"
-              value={form.phone}
-              onChange={(value) => setForm({ ...form, phone: value || "" })}
-              className="border rounded-md px-3 py-2"
-            />
+            <div className="relative">
+              <Phone
+                className="absolute top-1/2 left-3 -translate-y-1/2 text-gray-400"
+                size={18}
+              />
+              <PhoneInput
+                international
+                defaultCountry="IN"
+                value={form.phone}
+                onChange={(value) => setForm({ ...form, phone: value || "" })}
+                className="border rounded-md px-10 py-2 w-full focus:ring-2 focus:ring-primary focus:border-transparent"
+              />
+            </div>
 
-            <Textarea
-              placeholder="Message"
-              value={form.message}
-              onChange={(e) => setForm({ ...form, message: e.target.value })}
-            />
+            <div className="relative">
+              <MessageCircle
+                className="absolute top-2 left-3 text-gray-400"
+                size={18}
+              />
+              <Textarea
+                placeholder="Message"
+                value={form.message}
+                onChange={(e) => setForm({ ...form, message: e.target.value })}
+                className="pl-10 resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                rows={4}
+              />
+            </div>
 
             <Button
-              className="w-full h-9 sm:h-10 lg:h-12 bg-gradient-to-r from-primary to-accent hover:opacity-90 text-white font-semibold text-sm sm:text-base shadow-lg shadow-primary/30 transition-all duration-300 group"
+              className="w-full h-10 bg-gradient-to-r from-primary to-accent hover:opacity-90 text-white font-semibold text-sm sm:text-base shadow-md shadow-primary/30 transition-all duration-300 rounded-lg"
               onClick={handleSubmit}
               disabled={loading}
             >
