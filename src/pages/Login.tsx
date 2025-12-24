@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
+import Enquiry from "@/components/shared/EnquiryModal";
 
 const VALID_USERNAME = "pq.demo";
 const VALID_PASSWORD = "pq@demo";
@@ -43,8 +44,7 @@ const features = [
   {
     icon: Database,
     title: "ERP Integration",
-    description:
-      "Seamless connectivity with Emperor, GATI, SAP ERP etc.",
+    description: "Seamless connectivity with Emperor, GATI, SAP ERP etc.",
   },
   {
     icon: Shield,
@@ -231,6 +231,7 @@ const Login = () => {
 
       {/* Right Side - Login Form */}
       <div className="lg:w-1/2 w-full p-4 sm:p-6 lg:p-8 xl:p-12 flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 lg:rounded-l-3xl xl:rounded-l-[3rem]">
+        <Enquiry />
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
