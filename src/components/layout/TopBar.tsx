@@ -74,6 +74,11 @@ export function TopBar() {
     setExportStatus(message);
   };
 
+  const openLink = (url: string) => {
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
+
+
   const handleExport = async (type: "pdf" | "excel") => {
     setIsExporting(true);
     setExportProgress(0);
@@ -130,12 +135,31 @@ export function TopBar() {
         <div className="flex items-center gap-2 ml-12 lg:ml-0">
           <div className="hidden sm:block w-2 h-2 rounded-full bg-green-500 animate-pulse" />
           <h1 className="text-sm sm:text-lg font-semibold truncate">
-            Jewelery-Plant KPI Dashboard 
+            Jewelery-Plant KPI Dashboard
           </h1>
         </div>
 
         {/* Right */}
         <div className="flex items-center gap-2 sm:gap-4">
+          {/* Contact Us */}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => openLink("https://positivequadrant.in/contact-us")}
+            className="gap-2 h-8 sm:h-9 px-3 hidden sm:inline-flex"
+          >
+            Contact Us
+          </Button>
+
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => openLink("https://positivequadrant.in/contact-us")}
+            className="sm:hidden"
+          >
+            <User className="w-4 h-4" />
+          </Button>
+
           {/* Export Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

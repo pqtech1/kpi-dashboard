@@ -230,8 +230,22 @@ const Login = () => {
       </div>
 
       {/* Right Side - Login Form */}
-      <div className="lg:w-1/2 w-full p-4 sm:p-6 lg:p-8 xl:p-12 flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 lg:rounded-l-3xl xl:rounded-l-[3rem]">
-        <Enquiry />
+      <div className="relative lg:w-1/2 w-full p-4 sm:p-6 lg:p-8 xl:p-12 flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 lg:rounded-l-3xl xl:rounded-l-[3rem]">
+        {/* <Enquiry /> */}
+
+        {/* Contact Us Button - Top Right */}
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => openLink("https://positivequadrant.in/contact-us")}
+          className="absolute top-4 right-4 inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl
+             bg-gradient-to-r from-primary to-accent text-white text-xs sm:text-sm
+             font-semibold shadow-lg hover:opacity-90 transition-all"
+        >
+          Contact Us
+          <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
+        </motion.button>
+
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
