@@ -40,188 +40,16 @@
 
     <!-- Email Campaign Tracking Script -->
     <script>
-      (function () {
-        // Get tracking data from URL parameters
-        function getTrackingData() {
-          const params = new URLSearchParams(window.location.search);
-          const trackingData = {
-            campaign_id:
-              params.get("campaign_id") || getCookie("tracking_campaign_id"),
-            lead_id: params.get("lead_id") || getCookie("tracking_lead_id"),
-            email: params.get("email") || getCookie("tracking_email"),
-            source: params.get("source") || "direct",
-          };
-
-          // Return null if any required field is missing
-          if (
-            !trackingData.campaign_id ||
-            !trackingData.lead_id ||
-            !trackingData.email
-          ) {
-            return null;
-          }
-
-          return trackingData;
+      // tracking.js
+      class EmailTracker {
+        constructor() {
+          this.sessionId = this.generateSessionId();
+          this.startTime = Date.now();
+          this.maxScroll = 0;
+          this.init();
         }
 
-        function getCookie(name) {
-          const value = `; ${document.cookie}`;
-          const parts = value.split(`; ${name}=`);
-          if (parts.length === 2) return parts.pop().split(";").shift();
-          return null;
-        }
-
-        // Set tracking cookies if we have URL parameters
-        function setTrackingCookies() {
-          const params = new URLSearchParams(window.location.search);
-          const campaignId = params.get("campaign_id");
-          const leadId = params.get("lead_id");
-          const email = params.get("email");
-          const source = params.get("source");
-
-          if (campaignId && leadId && email) {
-            // Set cookies that expire in 7 days
-            const expires = new Date(
-              Date.now() + 7 * 24 * 60 * 60 * 1000
-            ).toUTCString();
-            document.cookie = `tracking_campaign_id=${campaignId}; expires=${expires}; path=/; SameSite=Lax`;
-            document.cookie = `tracking_lead_id=${leadId}; expires=${expires}; path=/; SameSite=Lax`;
-            document.cookie = `tracking_email=${encodeURIComponent(
-              email
-            )}; expires=${expires}; path=/; SameSite=Lax`;
-            if (source) {
-              document.cookie = `tracking_source=${source}; expires=${expires}; path=/; SameSite=Lax`;
-            }
-          }
-        }
-
-        // Track page view
-        function trackPageView() {
-          const data = getTrackingData();
-          if (!data) {
-            console.log("No tracking data available");
-            return;
-          }
-
-          const pageData = {
-            campaign_id: data.campaign_id,
-            lead_id: data.lead_id,
-            email: data.email,
-            page_url: window.location.href,
-            page_title: document.title,
-            referrer: document.referrer,
-            time_spent: 0,
-            scroll_depth: 0,
-            session_id:
-              sessionStorage.getItem("tracking_session_id") ||
-              generateSessionId(),
-          };
-
-          // Store session ID for this session
-          if (!sessionStorage.getItem("tracking_session_id")) {
-            sessionStorage.setItem("tracking_session_id", pageData.session_id);
-          }
-
-          // Send initial page view
-          sendTracking("page-view", pageData);
-
-          // Track time on page
-          let startTime = Date.now();
-          let maxScroll = 0;
-          let scrollInterval;
-
-          // Track scroll depth continuously
-          window.addEventListener("scroll", () => {
-            const scrollPercent = Math.round(
-              (window.scrollY /
-                (document.documentElement.scrollHeight - window.innerHeight)) *
-                100
-            );
-            maxScroll = Math.max(maxScroll, scrollPercent);
-          });
-
-          // Send final data before page unload
-          window.addEventListener("beforeunload", () => {
-            pageData.time_spent = Math.floor((Date.now() - startTime) / 1000);
-            pageData.scroll_depth = maxScroll;
-            sendTracking("page-view", pageData, true); // Use sendBeacon for unload
-          });
-        }
-
-        // Track link clicks
-        function trackLinkClicks() {
-          document.addEventListener("click", function (e) {
-            const link = e.target.closest("a");
-            if (!link) return;
-
-            const data = getTrackingData();
-            if (!data) return;
-
-            // Skip if href is empty or starts with javascript:
-            if (!link.href || link.href.startsWith("javascript:")) return;
-
-            const clickData = {
-              campaign_id: data.campaign_id,
-              lead_id: data.lead_id,
-              email: data.email,
-              link_url: link.href,
-              link_text: link.textContent?.trim().substring(0, 500) || "",
-              page_url: window.location.href,
-              element_id: link.id || "",
-              element_class: link.className || "",
-              link_type: determineLinkType(link),
-            };
-
-            // Send tracking data using sendBeacon for reliability
-            sendTracking("internal-click", clickData, true);
-          });
-        }
-
-        // Determine link type based on URL patterns
-        function determineLinkType(link) {
-          const href = link.href.toLowerCase();
-          const text = link.textContent?.toLowerCase() || "";
-
-          if (href.includes("/production") || text.includes("production"))
-            return "production";
-          if (
-            href.includes("/material-cost") ||
-            text.includes("material") ||
-            text.includes("cost")
-          )
-            return "material_cost";
-          if (
-            href.includes("/design-cad") ||
-            text.includes("design") ||
-            text.includes("cad")
-          )
-            return "design";
-          if (href.includes("/casting")) return "casting";
-          if (href.includes("/finishing")) return "finishing";
-          if (href.includes("/quality-control") || text.includes("quality"))
-            return "quality";
-          if (href.includes("/executive")) return "executive";
-          if (
-            href.includes("/pq-offering") ||
-            text.includes("expertise") ||
-            text.includes("services")
-          )
-            return "services";
-          if (href.includes("positivequadrant.in"))
-            return "external_positivequadrant";
-          if (href.includes("techupgrad.in")) return "internal_techupgrad";
-
-          // Check for common patterns
-          if (href.includes("contact") || href.includes("mailto:"))
-            return "contact";
-          if (href.includes("download") || href.includes(".pdf"))
-            return "download";
-
-          return "other";
-        }
-
-        // Generate unique session ID
-        function generateSessionId() {
+        generateSessionId() {
           return (
             "session_" +
             Date.now() +
@@ -230,59 +58,126 @@
           );
         }
 
-        // Send tracking data to your server
-        function sendTracking(type, data, useBeacon = false) {
-          const endpoints = {
-            "page-view": "/track-page-view",
-            "internal-click": "/track-internal-click",
+        init() {
+          // Get tracking params from URL
+          this.params = this.getTrackingParams();
+
+          if (
+            this.params.campaign_id &&
+            this.params.lead_id &&
+            this.params.email
+          ) {
+            this.trackPageView();
+            this.setupEventListeners();
+          }
+        }
+
+        getTrackingParams() {
+          const params = new URLSearchParams(window.location.search);
+          return {
+            campaign_id: params.get("campaign_id"),
+            lead_id: params.get("lead_id"),
+            email: params.get("email"),
+            source: params.get("source") || "direct",
+            link_type: params.get("link_type"),
+          };
+        }
+
+        trackPageView() {
+          const data = {
+            ...this.params,
+            page_url: window.location.href,
+            page_title: document.title,
+            referrer: document.referrer,
+            time_spent: 0,
+            scroll_depth: 0,
           };
 
-          if (!endpoints[type]) return;
+          // Send initial page view
+          this.sendTracking("/track/page-view", data);
 
-          const url = endpoints[type];
+          // Track scroll
+          window.addEventListener("scroll", () => {
+            const scrollPercent = Math.round(
+              (window.scrollY /
+                (document.documentElement.scrollHeight - window.innerHeight)) *
+                100
+            );
+            this.maxScroll = Math.max(this.maxScroll, scrollPercent);
+          });
+
+          // Send final data before unload
+          window.addEventListener("beforeunload", () => {
+            data.time_spent = Math.floor((Date.now() - this.startTime) / 1000);
+            data.scroll_depth = this.maxScroll;
+            this.sendTracking("/track/page-view", data, true);
+          });
+        }
+
+        setupEventListeners() {
+          // Track link clicks
+          document.addEventListener("click", (e) => {
+            const link = e.target.closest("a");
+            if (!link || !link.href || link.href.startsWith("javascript:"))
+              return;
+
+            const data = {
+              ...this.params,
+              link_url: link.href,
+              link_text: link.textContent?.trim().substring(0, 200) || "",
+              page_url: window.location.href,
+              link_type: this.determineLinkType(link),
+            };
+
+            this.sendTracking("/track/internal-click", data, true);
+          });
+        }
+
+        determineLinkType(link) {
+          const href = link.href.toLowerCase();
+          const text = link.textContent?.toLowerCase() || "";
+
+          if (href.includes("/production")) return "production";
+          if (href.includes("/material-cost")) return "material_cost";
+          if (href.includes("/design-cad")) return "design_cad";
+          if (href.includes("/casting")) return "casting";
+          if (href.includes("/finishing")) return "finishing";
+          if (href.includes("/quality-control")) return "quality_control";
+          if (href.includes("/executive")) return "executive";
+          if (href.includes("/pq-offering")) return "services";
+
+          return "other";
+        }
+
+        sendTracking(endpoint, data, useBeacon = false) {
+          const url = endpoint;
 
           if (useBeacon && navigator.sendBeacon) {
-            // Use Beacon API for reliable sending during page unload
             const formData = new FormData();
             Object.keys(data).forEach((key) => {
               formData.append(key, data[key]);
             });
             navigator.sendBeacon(url, formData);
           } else {
-            // Use fetch for other tracking
             fetch(url, {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
                 Accept: "application/json",
-                "X-Requested-With": "XMLHttpRequest",
               },
               body: JSON.stringify(data),
-              keepalive: true, // Keep request alive even after page unload
-            }).catch((error) => {
-              console.error("Tracking error:", error);
-            });
+              keepalive: true,
+            }).catch(console.error);
           }
         }
+      }
 
-        // Initialize tracking when DOM is ready
-        if (document.readyState === "loading") {
-          document.addEventListener("DOMContentLoaded", initTracking);
-        } else {
-          initTracking();
-        }
-
-        function initTracking() {
-          // Set tracking cookies from URL parameters
-          setTrackingCookies();
-
-          // Initialize tracking
-          trackPageView();
-          trackLinkClicks();
-
-          console.log("Email campaign tracking initialized");
-        }
-      })();
+      // Initialize when DOM is ready
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", () => new EmailTracker());
+      } else {
+        new EmailTracker();
+      }
     </script>
   </body>
 </html>
