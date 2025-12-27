@@ -1,16 +1,14 @@
 import { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 export function QueryParamsHandler() {
   const location = useLocation();
-  const navigate = useNavigate();
 
   useEffect(() => {
-    // Check if we have tracking params in URL
+    // Extract tracking params from URL
     const searchParams = new URLSearchParams(location.search);
 
-    // List of tracking parameters we want to preserve
-    const trackingParams = [
+    const trackingKeys = [
       "campaign_id",
       "lead_id",
       "email",
@@ -20,42 +18,68 @@ export function QueryParamsHandler() {
       "utm_campaign",
       "utm_term",
       "utm_content",
+      "link_type",
+      "click_time",
+      "click_tracked",
     ];
 
-    const hasTrackingParams = trackingParams.some((param) =>
-      searchParams.has(param)
-    );
+    const params: Record<string, string> = {};
+    trackingKeys.forEach((key) => {
+      const value = searchParams.get(key);
+      if (value) {
+        params[key] = decodeURIComponent(value);
+      }
+    });
 
-    if (hasTrackingParams) {
-      // Store params in sessionStorage for page tracking
-      const paramsObject: Record<string, string> = {};
-      trackingParams.forEach((param) => {
-        const value = searchParams.get(param);
-        if (value) {
-          paramsObject[param] = value;
+    // Store in localStorage for tracking script
+    if (Object.keys(params).length > 0) {
+      localStorage.setItem("pq_tracking_params", JSON.stringify(params));
+      console.log("QueryParamsHandler stored tracking params:", params);
+    }
+
+    // Send page view tracking if we have campaign_id, lead_id, and email
+    if (params.campaign_id && params.lead_id && params.email) {
+      sendPageViewTracking(params);
+    }
+  }, [location.search]);
+
+  const sendPageViewTracking = (params: Record<string, string>) => {
+    const data = {
+      ...params,
+      page_url: window.location.href,
+      page_title: document.title,
+      referrer: document.referrer,
+      time_spent: 0,
+      scroll_depth: 0,
+      user_agent: navigator.userAgent,
+      screen_resolution: `${window.screen.width}x${window.screen.height}`,
+      language: navigator.language,
+      timestamp: new Date().toISOString(),
+    };
+
+    // Send to Laravel tracking endpoint
+    fetch("https://techupgrad.in/crm/track/page-view", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(data),
+      keepalive: true,
+    })
+      .then((response) => {
+        if (!response.ok) {
+          console.error("Page view tracking failed:", response.status);
         }
+        return response.json();
+      })
+      .then((result) => {
+        console.log("Page view tracking successful:", result);
+      })
+      .catch((error) => {
+        console.error("Page view tracking error:", error);
       });
-
-      sessionStorage.setItem(
-        "email_tracking_params",
-        JSON.stringify(paramsObject)
-      );
-
-      // Also store in localStorage for persistence across pages
-      localStorage.setItem(
-        "email_tracking_params",
-        JSON.stringify(paramsObject)
-      );
-
-      console.log("Tracking params saved:", paramsObject);
-    }
-
-    // Check if we need to redirect with params preserved
-    if (location.pathname === "/kpi" && hasTrackingParams) {
-      // Navigate to overview page with params preserved
-      navigate(`/?${searchParams.toString()}`, { replace: true });
-    }
-  }, [location, navigate]);
+  };
 
   return null;
 }

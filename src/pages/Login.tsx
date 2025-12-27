@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   Eye,
@@ -30,7 +30,6 @@ import {
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
-import Enquiry from "@/components/shared/EnquiryModal";
 
 const VALID_USERNAME = "pq.demo";
 const VALID_PASSWORD = "pq@demo";
@@ -72,14 +71,91 @@ const Login = () => {
   const [resetEmail, setResetEmail] = useState("");
   const [resetDialogOpen, setResetDialogOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
   const { isAuthenticated, login } = useAuth();
 
+  // Extract tracking params from URL on mount
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+
+    // Extract and store tracking params
+    const trackingKeys = [
+      "campaign_id",
+      "lead_id",
+      "email",
+      "source",
+      "utm_source",
+      "utm_medium",
+      "utm_campaign",
+      "utm_term",
+      "utm_content",
+      "link_type",
+    ];
+
+    const trackingParams: Record<string, string> = {};
+    trackingKeys.forEach((key) => {
+      const value = searchParams.get(key);
+      if (value) {
+        trackingParams[key] = decodeURIComponent(value);
+      }
+    });
+
+    if (Object.keys(trackingParams).length > 0) {
+      localStorage.setItem(
+        "pq_tracking_params",
+        JSON.stringify(trackingParams)
+      );
+      console.log("Tracking params preserved on login page:", trackingParams);
+    }
+
+    // Check for demo credentials in URL
+    const urlUsername = searchParams.get("username");
+    const urlPassword = searchParams.get("password");
+
+    if (urlUsername === VALID_USERNAME && urlPassword === VALID_PASSWORD) {
+      // Auto-login with demo credentials
+      setUsername(VALID_USERNAME);
+      setPassword(VALID_PASSWORD);
+
+      // Auto-submit form after a delay
+      setTimeout(() => {
+        handleAutoLogin();
+      }, 500);
+    }
+  }, [location.search]);
+
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/");
+      // Get tracking params from localStorage
+      const trackingParams = localStorage.getItem("pq_tracking_params");
+      let redirectPath = "/";
+
+      if (trackingParams) {
+        try {
+          const params = JSON.parse(trackingParams);
+          const queryString = new URLSearchParams(params).toString();
+          redirectPath = `/?${queryString}`;
+           console.log("Redirecting with tracking params:", params);
+
+        } catch (e) {
+          console.error("Error parsing tracking params:", e);
+        }
+      }
+
+      navigate(redirectPath);
     }
   }, [isAuthenticated, navigate]);
+
+  const handleAutoLogin = () => {
+    setIsLoading(true);
+    login({ username: VALID_USERNAME, name: "PQ Jewel Admin" });
+    toast({
+      title: "Auto-login successful!",
+      description: "Welcome to Jewel INTEGRA Dashboard",
+    });
+    setIsLoading(false);
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -93,7 +169,6 @@ const Login = () => {
         title: "Welcome back!",
         description: "Login successful. Redirecting to dashboard...",
       });
-      setTimeout(() => navigate("/"), 500);
     } else {
       toast({
         title: "Login Failed",
@@ -231,21 +306,6 @@ const Login = () => {
 
       {/* Right Side - Login Form */}
       <div className="relative lg:w-1/2 w-full p-4 sm:p-6 lg:p-8 xl:p-12 flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 lg:rounded-l-3xl xl:rounded-l-[3rem]">
-        {/* <Enquiry /> */}
-
-        {/* Contact Us Button - Top Right */}
-        {/* <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => openLink("https://positivequadrant.in/contact-us")}
-          className="absolute top-4 right-4 inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl
-             bg-gradient-to-r from-primary to-accent text-white text-xs sm:text-sm
-             font-semibold shadow-lg hover:opacity-90 transition-all"
-        >
-          Contact Us
-          <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
-        </motion.button> */}
-
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -267,7 +327,7 @@ const Login = () => {
                 onSubmit={handleLogin}
                 className="space-y-3 sm:space-y-4 lg:space-y-5"
               >
-                {/* Username Field - Stacked on mobile, inline on larger screens */}
+                {/* Username Field */}
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -294,7 +354,7 @@ const Login = () => {
                   </div>
                 </motion.div>
 
-                {/* Password Field - Stacked on mobile, inline on larger screens */}
+                {/* Password Field */}
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -436,7 +496,7 @@ const Login = () => {
                     </motion.div>
                   </div>
 
-                  {/* Contact info - Stack on mobile, row on larger */}
+                  {/* Contact info */}
                   <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 flex-wrap">
                     <a
                       href="tel:7219623991"
