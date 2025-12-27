@@ -23,12 +23,17 @@ import ERPIntegrationSolution from "./pages/solutions/ERPIntegrationSolution";
 import ICEGateSolution from "./pages/solutions/ICEGateSolution";
 import KPIDashboardSolution from "./pages/solutions/KPIDashboardSolution";
 import NotFound from "./pages/NotFound";
+import { QueryParamsHandler } from "./components/QueryParamsHandler";
+import { PreserveQueryParams } from "./components/PreserveQueryParams";
+import LandingPage from "./pages/LandingPage";
 
 const queryClient = new QueryClient();
 
 const ProtectedDashboard = () => (
   <ProtectedRoute>
     <DashboardLayout>
+      <PreserveQueryParams />
+      <QueryParamsHandler />
       <Routes>
         <Route path="/" element={<Overview />} />
         <Route path="/production" element={<ProductionTracking />} />
@@ -70,6 +75,7 @@ const App = () => (
         <AuthProvider>
           <Routes>
             <Route path="/login" element={<Login />} />
+            <Route path="/landing" element={<LandingPage />} />
             <Route path="/*" element={<ProtectedDashboard />} />
           </Routes>
         </AuthProvider>
