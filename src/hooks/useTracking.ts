@@ -41,7 +41,7 @@ export function useTracking() {
   // Auto-extract params on location change
   const extractParams = useCallback(() => {
     return extractAndStoreParams();
-  }, [extractAndStoreParams, location.search]);
+  }, [extractAndStoreParams]);
 
   return {
     extractAndStoreParams: extractParams,

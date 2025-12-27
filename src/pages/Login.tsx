@@ -6,7 +6,6 @@ import {
   EyeOff,
   Lock,
   User,
-  Gem,
   ArrowRight,
   CheckCircle,
   Zap,
@@ -73,9 +72,9 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
-  const { isAuthenticated, login } = useAuth();
+  const { isAuthenticated, login, isLoading: authLoading } = useAuth();
 
-  // Extract tracking params from URL on mount
+  // Extract tracking params from URL on mount and auto-login if demo credentials
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
 
@@ -91,6 +90,8 @@ const Login = () => {
       "utm_term",
       "utm_content",
       "link_type",
+      "click_time",
+      "click_tracked",
     ];
 
     const trackingParams: Record<string, string> = {};
@@ -118,15 +119,31 @@ const Login = () => {
       setUsername(VALID_USERNAME);
       setPassword(VALID_PASSWORD);
 
-      // Auto-submit form after a delay
+      // Auto-submit form after a short delay
       setTimeout(() => {
         handleAutoLogin();
-      }, 500);
+      }, 1000);
     }
   }, [location.search]);
 
+  // Handle auto-login
+  const handleAutoLogin = () => {
+    if (isLoading) return;
+
+    setIsLoading(true);
+    login({ username: VALID_USERNAME, name: "PQ Jewel Admin" });
+
+    toast({
+      title: "Auto-login successful!",
+      description: "Welcome to Jewel INTEGRA Dashboard",
+    });
+
+    setIsLoading(false);
+  };
+
+  // Redirect if already authenticated
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated && !authLoading) {
       // Get tracking params from localStorage
       const trackingParams = localStorage.getItem("pq_tracking_params");
       let redirectPath = "/";
@@ -136,8 +153,7 @@ const Login = () => {
           const params = JSON.parse(trackingParams);
           const queryString = new URLSearchParams(params).toString();
           redirectPath = `/?${queryString}`;
-           console.log("Redirecting with tracking params:", params);
-
+          console.log("Redirecting with tracking params:", params);
         } catch (e) {
           console.error("Error parsing tracking params:", e);
         }
@@ -145,22 +161,13 @@ const Login = () => {
 
       navigate(redirectPath);
     }
-  }, [isAuthenticated, navigate]);
-
-  const handleAutoLogin = () => {
-    setIsLoading(true);
-    login({ username: VALID_USERNAME, name: "PQ Jewel Admin" });
-    toast({
-      title: "Auto-login successful!",
-      description: "Welcome to Jewel INTEGRA Dashboard",
-    });
-    setIsLoading(false);
-  };
+  }, [isAuthenticated, authLoading, navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
+    // Simulate API call delay
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     if (username === VALID_USERNAME && password === VALID_PASSWORD) {
@@ -193,6 +200,18 @@ const Login = () => {
   const openLink = (url: string) => {
     window.open(url, "_blank", "noopener,noreferrer");
   };
+
+  // Show loading while auth is initializing
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin" />
+          <p className="text-white">Loading authentication...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 flex flex-col lg:flex-row overflow-auto lg:overflow-hidden">
@@ -470,13 +489,29 @@ const Login = () => {
                     )}
                   </Button>
                 </motion.div>
+
+                {/* Demo Credentials Notice */}
+                {(location.search.includes("username=pq.demo") ||
+                  location.search.includes("campaign_id")) && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.7 }}
+                    className="text-center"
+                  >
+                    <p className="text-xs text-muted-foreground">
+                      Using demo credentials? Click Sign In or wait for
+                      auto-login
+                    </p>
+                  </motion.div>
+                )}
               </form>
 
               {/* Developer Info Section */}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.7 }}
+                transition={{ delay: 0.8 }}
                 className="mt-4 sm:mt-6 lg:mt-8 pt-3 sm:pt-4 lg:pt-6 border-t border-border/50"
               >
                 <div className="space-y-2 sm:space-y-3">

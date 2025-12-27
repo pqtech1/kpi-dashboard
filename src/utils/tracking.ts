@@ -14,8 +14,8 @@ export const TRACKING_PARAM_KEYS = [
   "utm_term",
   "utm_content",
   "link_type",
-  "email_id",
-  "timestamp",
+  "click_time",
+  "click_tracked",
 ] as const;
 
 export type TrackingParamKey = (typeof TRACKING_PARAM_KEYS)[number];
@@ -31,8 +31,8 @@ export interface TrackingParams {
   utm_term?: string;
   utm_content?: string;
   link_type?: string;
-  email_id?: string;
-  timestamp?: string;
+  click_time?: string;
+  click_tracked?: string;
   [key: string]: string | undefined;
 }
 
@@ -215,10 +215,10 @@ export function initializeTracking(): void {
     storeTrackingParams(urlParams);
   }
 
-  // Send initial page view
+  // Send initial page view after a delay
   setTimeout(() => {
     trackPageView();
-  }, 1000);
+  }, 1500);
 
   // Track time on page
   let startTime = Date.now();

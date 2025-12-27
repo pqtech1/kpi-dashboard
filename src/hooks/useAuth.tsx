@@ -75,50 +75,68 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // Extract tracking params on location change
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
+    extractTrackingParams(searchParams);
+  }, [location.search]);
 
-    // Always extract and store tracking params from URL
-    const trackingParams = extractTrackingParams(searchParams);
-
-    // Check for demo credentials in URL
-    const username = searchParams.get("username");
-    const password = searchParams.get("password");
-
-    // Auto-login with demo credentials
-    if (username === "pq.demo" && password === "pq@demo") {
-      const session: Session = {
-        user: { username: "pq.demo", name: "PQ Jewel Admin" },
-        expiresAt: Date.now() + SESSION_DURATION,
-      };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
-      setIsAuthenticated(true);
-      setUser(session.user);
-      setIsLoading(false);
-
-      // Redirect to dashboard with tracking params preserved
-      if (Object.keys(trackingParams).length > 0) {
-        const queryString = new URLSearchParams(trackingParams).toString();
-        navigate(`/?${queryString}`);
-      } else {
-        navigate("/");
-      }
-      return;
-    }
-  }, [location.search, navigate]);
-
-  // Check and restore session on mount
+  // Check for demo auto-login on mount and handle session
   useEffect(() => {
-    const checkSession = () => {
+    const initializeAuth = async () => {
       try {
+        // Check for demo auto-login flag
+        const shouldAutoLogin =
+          localStorage.getItem("pq_demo_auto_login") === "true";
+        const demoParams = localStorage.getItem("pq_demo_params");
+
+        if (shouldAutoLogin && demoParams) {
+          try {
+            const { username, password } = JSON.parse(demoParams);
+
+            if (username === "pq.demo" && password === "pq@demo") {
+              // Auto-login with demo credentials
+              const session: Session = {
+                user: { username: "pq.demo", name: "PQ Jewel Admin" },
+                expiresAt: Date.now() + SESSION_DURATION,
+              };
+
+              localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
+              localStorage.removeItem("pq_demo_auto_login");
+              localStorage.removeItem("pq_demo_params");
+
+              setIsAuthenticated(true);
+              setUser(session.user);
+              setIsLoading(false);
+
+              // Get tracking params for redirect
+              const trackingParams = getTrackingParams();
+              let redirectPath = "/";
+
+              if (Object.keys(trackingParams).length > 0) {
+                const queryString = new URLSearchParams(
+                  trackingParams as Record<string, string>
+                ).toString();
+                redirectPath = `/?${queryString}`;
+              }
+
+              navigate(redirectPath);
+              return;
+            }
+          } catch (error) {
+            console.error("Error parsing demo params:", error);
+          }
+        }
+
+        // Check existing session
         const sessionData = localStorage.getItem(STORAGE_KEY);
 
         if (sessionData) {
           const session: Session = JSON.parse(sessionData);
 
           if (session.expiresAt > Date.now()) {
+            // Valid session
             setIsAuthenticated(true);
             setUser(session.user);
 
-            // Refresh session expiry on activity
+            // Refresh session expiry
             const newSession: Session = {
               user: session.user,
               expiresAt: Date.now() + SESSION_DURATION,
@@ -130,13 +148,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           }
         }
       } catch (error) {
-        console.error("Error checking session:", error);
+        console.error("Error initializing auth:", error);
         localStorage.removeItem(STORAGE_KEY);
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     };
 
-    checkSession();
+    initializeAuth();
 
     // Listen for storage changes (for cross-tab sync)
     const handleStorageChange = (e: StorageEvent) => {
@@ -161,7 +180,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     window.addEventListener("storage", handleStorageChange);
     return () => window.removeEventListener("storage", handleStorageChange);
-  }, []);
+  }, [navigate]);
 
   // Refresh session periodically while user is active
   useEffect(() => {
@@ -198,23 +217,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
   }, [isAuthenticated]);
 
-  // Redirect authenticated users to dashboard with tracking params
+  // Redirect authenticated users away from login
   useEffect(() => {
-    if (isAuthenticated && !isLoading) {
-      // Get tracking params from localStorage
+    if (isAuthenticated && !isLoading && location.pathname === "/login") {
       const trackingParams = getTrackingParams();
+      let redirectPath = "/";
 
-      // Only redirect if we're on login page
-      if (location.pathname === "/login") {
-        if (Object.keys(trackingParams).length > 0) {
-          const queryString = new URLSearchParams(
-            trackingParams as Record<string, string>
-          ).toString();
-          navigate(`/?${queryString}`);
-        } else {
-          navigate("/");
-        }
+      if (Object.keys(trackingParams).length > 0) {
+        const queryString = new URLSearchParams(
+          trackingParams as Record<string, string>
+        ).toString();
+        redirectPath = `/?${queryString}`;
       }
+
+      navigate(redirectPath);
     }
   }, [isAuthenticated, isLoading, location.pathname, navigate]);
 
@@ -226,6 +242,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
     setIsAuthenticated(true);
     setUser(userData);
+
+    // Clear any demo auto-login flags
+    localStorage.removeItem("pq_demo_auto_login");
+    localStorage.removeItem("pq_demo_params");
   };
 
   const logout = () => {
