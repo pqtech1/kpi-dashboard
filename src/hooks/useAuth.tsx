@@ -1,15 +1,13 @@
-import {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  ReactNode,
-} from "react";
-import { useNavigate } from "react-router-dom";
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
 interface User {
   username: string;
   name: string;
+}
+
+interface Session {
+  user: User;
+  expiresAt: number;
 }
 
 interface AuthContextType {
@@ -29,26 +27,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const navigate = useNavigate();
 
-  // Initialize auth state
+  // Check and restore session on mount
   useEffect(() => {
-    const initializeAuth = () => {
+    const checkSession = () => {
       try {
         const sessionData = localStorage.getItem(STORAGE_KEY);
-
+        
         if (sessionData) {
-          const session = JSON.parse(sessionData);
-
+          const session: Session = JSON.parse(sessionData);
+          
           if (session.expiresAt > Date.now()) {
-            // Valid session
             setIsAuthenticated(true);
             setUser(session.user);
-
-            // Refresh session
-            const newSession = {
+            
+            // Refresh session expiry on activity
+            const newSession: Session = {
               user: session.user,
-              expiresAt: Date.now() + SESSION_DURATION,
+              expiresAt: Date.now() + SESSION_DURATION
             };
             localStorage.setItem(STORAGE_KEY, JSON.stringify(newSession));
           } else {
@@ -57,47 +53,88 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           }
         }
       } catch (error) {
-        console.error("Error initializing auth:", error);
+        console.error("Error checking session:", error);
         localStorage.removeItem(STORAGE_KEY);
       }
-
       setIsLoading(false);
     };
 
-    initializeAuth();
-  }, []);
+    checkSession();
 
-  const login = (userData: User) => {
-    const session = {
-      user: userData,
-      expiresAt: Date.now() + SESSION_DURATION,
+    // Listen for storage changes (for cross-tab sync)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === STORAGE_KEY) {
+        if (e.newValue) {
+          try {
+            const session: Session = JSON.parse(e.newValue);
+            if (session.expiresAt > Date.now()) {
+              setIsAuthenticated(true);
+              setUser(session.user);
+            }
+          } catch {
+            // Invalid session data
+          }
+        } else {
+          // Session was removed (logged out in another tab)
+          setIsAuthenticated(false);
+          setUser(null);
+        }
+      }
     };
 
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
+  // Refresh session periodically while user is active
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    const refreshSession = () => {
+      const sessionData = localStorage.getItem(STORAGE_KEY);
+      if (sessionData) {
+        try {
+          const session: Session = JSON.parse(sessionData);
+          if (session.expiresAt > Date.now()) {
+            const newSession: Session = {
+              user: session.user,
+              expiresAt: Date.now() + SESSION_DURATION
+            };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(newSession));
+          }
+        } catch {
+          // Invalid session
+        }
+      }
+    };
+
+    // Refresh on user activity
+    const events = ['mousedown', 'keydown', 'scroll', 'touchstart'];
+    events.forEach(event => window.addEventListener(event, refreshSession, { passive: true }));
+    
+    return () => {
+      events.forEach(event => window.removeEventListener(event, refreshSession));
+    };
+  }, [isAuthenticated]);
+
+  const login = (userData: User) => {
+    const session: Session = {
+      user: userData,
+      expiresAt: Date.now() + SESSION_DURATION
+    };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
     setIsAuthenticated(true);
     setUser(userData);
-
-    // Clear auto-login flags
-    localStorage.removeItem("pq_demo_auto_login");
   };
 
   const logout = () => {
     localStorage.removeItem(STORAGE_KEY);
     setIsAuthenticated(false);
     setUser(null);
-    navigate("/login");
   };
 
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        isAuthenticated,
-        isLoading,
-        login,
-        logout,
-      }}
-    >
+    <AuthContext.Provider value={{ user, isAuthenticated, isLoading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

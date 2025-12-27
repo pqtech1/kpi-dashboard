@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   Eye,
   EyeOff,
   Lock,
   User,
+  Gem,
   ArrowRight,
   CheckCircle,
   Zap,
@@ -29,6 +30,7 @@ import {
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
+import Enquiry from "@/components/shared/EnquiryModal";
 
 const VALID_USERNAME = "pq.demo";
 const VALID_PASSWORD = "pq@demo";
@@ -70,119 +72,19 @@ const Login = () => {
   const [resetEmail, setResetEmail] = useState("");
   const [resetDialogOpen, setResetDialogOpen] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation();
   const { toast } = useToast();
-  const { isAuthenticated, login, isLoading: authLoading } = useAuth();
+  const { isAuthenticated, login } = useAuth();
 
-  // Check for auto-login on mount
   useEffect(() => {
-    const checkAutoLogin = () => {
-      const shouldAutoLogin =
-        localStorage.getItem("pq_demo_auto_login") === "true";
-
-      if (shouldAutoLogin) {
-        // Auto-login with demo credentials
-        setUsername(VALID_USERNAME);
-        setPassword(VALID_PASSWORD);
-
-        // Clear the flag
-        localStorage.removeItem("pq_demo_auto_login");
-
-        // Trigger auto-login after a short delay
-        setTimeout(() => {
-          handleAutoLogin();
-        }, 1000);
-      }
-    };
-
-    checkAutoLogin();
-  }, []);
-
-  // Extract tracking params from URL on mount
-  useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-
-    const trackingKeys = [
-      "campaign_id",
-      "lead_id",
-      "email",
-      "source",
-      "utm_source",
-      "utm_medium",
-      "utm_campaign",
-      "utm_term",
-      "utm_content",
-      "link_type",
-    ];
-
-    const trackingParams: Record<string, string> = {};
-    trackingKeys.forEach((key) => {
-      const value = searchParams.get(key);
-      if (value) {
-        trackingParams[key] = decodeURIComponent(value);
-      }
-    });
-
-    // Store tracking params from URL
-    if (Object.keys(trackingParams).length > 0) {
-      localStorage.setItem(
-        "pq_tracking_params",
-        JSON.stringify(trackingParams)
-      );
-      console.log("Login page extracted tracking params:", trackingParams);
+    if (isAuthenticated) {
+      navigate("/");
     }
-  }, [location.search]);
-
-  // Handle auto-login
-  const handleAutoLogin = () => {
-    if (isLoading) return;
-
-    setIsLoading(true);
-    login({ username: VALID_USERNAME, name: "PQ Jewel Admin" });
-
-    toast({
-      title: "Auto-login successful!",
-      description: "Welcome to Jewel INTEGRA Dashboard",
-    });
-
-    setIsLoading(false);
-  };
-
-  // Redirect if already authenticated
-  useEffect(() => {
-    if (isAuthenticated && !authLoading) {
-      // Get return URL from localStorage or default to dashboard
-      const returnTo = localStorage.getItem("pq_return_to") || "/";
-      localStorage.removeItem("pq_return_to");
-
-      // Get tracking params for redirect
-      const trackingParams = localStorage.getItem("pq_tracking_params");
-
-      if (trackingParams) {
-        try {
-          const params = JSON.parse(trackingParams);
-          const queryString = new URLSearchParams(params).toString();
-
-          if (returnTo === "/") {
-            navigate(`/?${queryString}`);
-          } else {
-            navigate(`${returnTo}?${queryString}`);
-          }
-        } catch (e) {
-          console.error("Error parsing tracking params:", e);
-          navigate(returnTo);
-        }
-      } else {
-        navigate(returnTo);
-      }
-    }
-  }, [isAuthenticated, authLoading, navigate]);
+  }, [isAuthenticated, navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Simulate API call delay
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     if (username === VALID_USERNAME && password === VALID_PASSWORD) {
@@ -191,6 +93,7 @@ const Login = () => {
         title: "Welcome back!",
         description: "Login successful. Redirecting to dashboard...",
       });
+      setTimeout(() => navigate("/"), 500);
     } else {
       toast({
         title: "Login Failed",
@@ -215,18 +118,6 @@ const Login = () => {
   const openLink = (url: string) => {
     window.open(url, "_blank", "noopener,noreferrer");
   };
-
-  // Show loading while auth is initializing
-  if (authLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin" />
-          <p className="text-white">Loading...</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 flex flex-col lg:flex-row overflow-auto lg:overflow-hidden">
@@ -286,7 +177,7 @@ const Login = () => {
             </motion.p>
           </div>
 
-          {/* Features Grid */}
+          {/* Features Grid - Responsive layout */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 lg:gap-4 mb-4 sm:mb-6 lg:mb-10">
             {features.map((feature, index) => (
               <motion.div
@@ -340,6 +231,21 @@ const Login = () => {
 
       {/* Right Side - Login Form */}
       <div className="relative lg:w-1/2 w-full p-4 sm:p-6 lg:p-8 xl:p-12 flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 lg:rounded-l-3xl xl:rounded-l-[3rem]">
+        {/* <Enquiry /> */}
+
+        {/* Contact Us Button - Top Right */}
+        {/* <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => openLink("https://positivequadrant.in/contact-us")}
+          className="absolute top-4 right-4 inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl
+             bg-gradient-to-r from-primary to-accent text-white text-xs sm:text-sm
+             font-semibold shadow-lg hover:opacity-90 transition-all"
+        >
+          Contact Us
+          <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
+        </motion.button> */}
+
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -355,22 +261,13 @@ const Login = () => {
                 <p className="text-muted-foreground text-xs sm:text-sm lg:text-base">
                   Sign in to access your dashboard
                 </p>
-
-                {/* Show tracking params if present */}
-                {location.search && (
-                  <div className="mt-2 p-2 bg-blue-50 rounded text-xs">
-                    <p className="text-blue-600">
-                      Tracking parameters detected
-                    </p>
-                  </div>
-                )}
               </div>
 
               <form
                 onSubmit={handleLogin}
                 className="space-y-3 sm:space-y-4 lg:space-y-5"
               >
-                {/* Username Field */}
+                {/* Username Field - Stacked on mobile, inline on larger screens */}
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -397,7 +294,7 @@ const Login = () => {
                   </div>
                 </motion.div>
 
-                {/* Password Field */}
+                {/* Password Field - Stacked on mobile, inline on larger screens */}
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -513,14 +410,6 @@ const Login = () => {
                     )}
                   </Button>
                 </motion.div>
-
-                {/* Demo Credentials Info */}
-                <div className="text-center">
-                  <p className="text-xs text-muted-foreground">
-                    Demo Credentials: <strong>pq.demo</strong> /{" "}
-                    <strong>pq@demo</strong>
-                  </p>
-                </div>
               </form>
 
               {/* Developer Info Section */}
@@ -531,6 +420,7 @@ const Login = () => {
                 className="mt-4 sm:mt-6 lg:mt-8 pt-3 sm:pt-4 lg:pt-6 border-t border-border/50"
               >
                 <div className="space-y-2 sm:space-y-3">
+                  {/* Developer by line */}
                   <div className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2">
                     <span className="text-xs text-muted-foreground">
                       Developed by
@@ -546,6 +436,7 @@ const Login = () => {
                     </motion.div>
                   </div>
 
+                  {/* Contact info - Stack on mobile, row on larger */}
                   <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 flex-wrap">
                     <a
                       href="tel:7219623991"
@@ -563,6 +454,7 @@ const Login = () => {
                     </a>
                   </div>
 
+                  {/* Please Visit + Links */}
                   <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 flex-wrap">
                     <span className="text-xs text-muted-foreground">
                       Please Visit:

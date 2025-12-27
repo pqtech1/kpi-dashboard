@@ -40,294 +40,144 @@
 
     <!-- Email Campaign Tracking Script -->
     <script>
-      (function () {
-        // Email tracking configuration
-        const TRACKING_ENDPOINTS = {
-          pageView: "https://techupgrad.in/crm/track/page-view",
-          internalClick: "https://techupgrad.in/crm/track/internal-click",
-        };
+      // tracking.js
+      class EmailTracker {
+        constructor() {
+          this.sessionId = this.generateSessionId();
+          this.startTime = Date.now();
+          this.maxScroll = 0;
+          this.init();
+        }
 
-        class EmailTracker {
-          constructor() {
-            this.sessionId = this.generateSessionId();
-            this.startTime = Date.now();
-            this.maxScroll = 0;
-            this.params = this.getTrackingParams();
-            this.init();
+        generateSessionId() {
+          return (
+            "session_" +
+            Date.now() +
+            "_" +
+            Math.random().toString(36).substr(2, 9)
+          );
+        }
+
+        init() {
+          // Get tracking params from URL
+          this.params = this.getTrackingParams();
+
+          if (
+            this.params.campaign_id &&
+            this.params.lead_id &&
+            this.params.email
+          ) {
+            this.trackPageView();
+            this.setupEventListeners();
           }
+        }
 
-          generateSessionId() {
-            return (
-              "session_" +
-              Date.now() +
-              "_" +
-              Math.random().toString(36).substr(2, 9)
+        getTrackingParams() {
+          const params = new URLSearchParams(window.location.search);
+          return {
+            campaign_id: params.get("campaign_id"),
+            lead_id: params.get("lead_id"),
+            email: params.get("email"),
+            source: params.get("source") || "direct",
+            link_type: params.get("link_type"),
+          };
+        }
+
+        trackPageView() {
+          const data = {
+            ...this.params,
+            page_url: window.location.href,
+            page_title: document.title,
+            referrer: document.referrer,
+            time_spent: 0,
+            scroll_depth: 0,
+          };
+
+          // Send initial page view
+          this.sendTracking("/track/page-view", data);
+
+          // Track scroll
+          window.addEventListener("scroll", () => {
+            const scrollPercent = Math.round(
+              (window.scrollY /
+                (document.documentElement.scrollHeight - window.innerHeight)) *
+                100
             );
-          }
+            this.maxScroll = Math.max(this.maxScroll, scrollPercent);
+          });
 
-          getTrackingParams() {
-            // First try to get from URL
-            const urlParams = new URLSearchParams(window.location.search);
+          // Send final data before unload
+          window.addEventListener("beforeunload", () => {
+            data.time_spent = Math.floor((Date.now() - this.startTime) / 1000);
+            data.scroll_depth = this.maxScroll;
+            this.sendTracking("/track/page-view", data, true);
+          });
+        }
 
-            // Then try to get from sessionStorage
-            const sessionParams = sessionStorage.getItem(
-              "email_tracking_params"
-            );
+        setupEventListeners() {
+          // Track link clicks
+          document.addEventListener("click", (e) => {
+            const link = e.target.closest("a");
+            if (!link || !link.href || link.href.startsWith("javascript:"))
+              return;
 
-            // Then try to get from localStorage
-            const localParams = localStorage.getItem("email_tracking_params");
-
-            let params = {};
-
-            // Priority: URL params > sessionStorage > localStorage
-            if (urlParams.has("campaign_id")) {
-              params = {
-                campaign_id: urlParams.get("campaign_id"),
-                lead_id: urlParams.get("lead_id"),
-                email: decodeURIComponent(urlParams.get("email") || ""),
-                source: urlParams.get("source") || "direct",
-                link_type: urlParams.get("link_type") || "direct",
-                utm_source: urlParams.get("utm_source"),
-                utm_medium: urlParams.get("utm_medium"),
-                utm_campaign: urlParams.get("utm_campaign"),
-                utm_term: urlParams.get("utm_term"),
-                utm_content: urlParams.get("utm_content"),
-              };
-            } else if (sessionParams) {
-              try {
-                params = JSON.parse(sessionParams);
-              } catch (e) {
-                console.error("Failed to parse session params:", e);
-              }
-            } else if (localParams) {
-              try {
-                params = JSON.parse(localParams);
-              } catch (e) {
-                console.error("Failed to parse local params:", e);
-              }
-            }
-
-            return params;
-          }
-
-          init() {
-            if (
-              this.params.campaign_id &&
-              this.params.lead_id &&
-              this.params.email
-            ) {
-              console.log(
-                "Email tracking initialized with params:",
-                this.params
-              );
-              this.trackPageView();
-              this.setupEventListeners();
-              this.setupHistoryListener();
-            } else {
-              console.log("No email tracking params found");
-            }
-          }
-
-          trackPageView() {
             const data = {
               ...this.params,
+              link_url: link.href,
+              link_text: link.textContent?.trim().substring(0, 200) || "",
               page_url: window.location.href,
-              page_title: document.title,
-              referrer: document.referrer,
-              time_spent: 0,
-              scroll_depth: 0,
-              session_id: this.sessionId,
+              link_type: this.determineLinkType(link),
             };
 
-            console.log("Tracking page view:", data);
-
-            // Send initial page view
-            this.sendTracking(TRACKING_ENDPOINTS.pageView, data);
-
-            // Track scroll depth
-            window.addEventListener("scroll", () => {
-              const scrollableHeight =
-                document.documentElement.scrollHeight - window.innerHeight;
-              const scrollPercent =
-                scrollableHeight > 0
-                  ? Math.round((window.scrollY / scrollableHeight) * 100)
-                  : 0;
-              this.maxScroll = Math.max(this.maxScroll, scrollPercent);
-            });
-
-            // Send final data before unload
-            window.addEventListener("beforeunload", () => {
-              data.time_spent = Math.floor(
-                (Date.now() - this.startTime) / 1000
-              );
-              data.scroll_depth = this.maxScroll;
-              console.log("Sending final page view data:", data);
-              this.sendTracking(TRACKING_ENDPOINTS.pageView, data, true);
-            });
-          }
-
-          setupEventListeners() {
-            // Track link clicks
-            document.addEventListener("click", (e) => {
-              const link = e.target.closest("a");
-              if (!link || !link.href || link.href.startsWith("javascript:"))
-                return;
-
-              // Don't track external links that open in new tab
-              if (link.target === "_blank") return;
-
-              const data = {
-                ...this.params,
-                link_url: link.href,
-                link_text: link.textContent?.trim().substring(0, 200) || "",
-                page_url: window.location.href,
-                link_type: this.determineLinkType(link),
-              };
-
-              console.log("Tracking link click:", data);
-              this.sendTracking(TRACKING_ENDPOINTS.internalClick, data, true);
-            });
-          }
-
-          setupHistoryListener() {
-            // Listen for React Router navigation
-            const originalPushState = history.pushState;
-            const originalReplaceState = history.replaceState;
-
-            // Override pushState
-            history.pushState = function (state, title, url) {
-              originalPushState.apply(this, arguments);
-              window.dispatchEvent(new Event("pushstate"));
-              window.dispatchEvent(new Event("locationchange"));
-            };
-
-            // Override replaceState
-            history.replaceState = function (state, title, url) {
-              originalReplaceState.apply(this, arguments);
-              window.dispatchEvent(new Event("replacestate"));
-              window.dispatchEvent(new Event("locationchange"));
-            };
-
-            // Listen to popstate
-            window.addEventListener("popstate", () => {
-              window.dispatchEvent(new Event("locationchange"));
-            });
-
-            // Handle location changes (React Router navigation)
-            window.addEventListener("locationchange", () => {
-              setTimeout(() => {
-                this.params = this.getTrackingParams();
-                if (
-                  this.params.campaign_id &&
-                  this.params.lead_id &&
-                  this.params.email
-                ) {
-                  this.trackPageView();
-                }
-              }, 100);
-            });
-          }
-
-          determineLinkType(link) {
-            const href = link.href.toLowerCase();
-            const text = link.textContent?.toLowerCase() || "";
-
-            // Internal navigation links
-            if (href.includes("/production")) return "production";
-            if (href.includes("/material-cost")) return "material_cost";
-            if (href.includes("/design-cad")) return "design_cad";
-            if (href.includes("/casting")) return "casting";
-            if (href.includes("/finishing")) return "finishing";
-            if (href.includes("/quality-control")) return "quality_control";
-            if (href.includes("/executive")) return "executive";
-            if (href.includes("/pq-offering")) return "services";
-
-            // External links
-            if (href.includes("positivequadrant.in"))
-              return "external_positivequadrant";
-            if (href.includes("techupgrad.in")) {
-              if (href.includes("/kpi")) return "internal_kpi";
-              if (href.includes("/crm")) return "internal_crm";
-              return "internal_techupgrad";
-            }
-
-            // Common patterns
-            if (href.includes("contact") || href.includes("mailto:"))
-              return "contact";
-            if (href.includes("download") || href.includes(".pdf"))
-              return "download";
-            if (href.includes("login") || href.includes("signin"))
-              return "login";
-
-            return "other";
-          }
-
-          sendTracking(endpoint, data, useBeacon = false) {
-            if (!endpoint) {
-              console.error("No endpoint provided for tracking");
-              return;
-            }
-
-            // Ensure email is properly encoded
-            if (data.email) {
-              data.email = decodeURIComponent(data.email);
-            }
-
-            if (useBeacon && navigator.sendBeacon) {
-              const formData = new FormData();
-              Object.keys(data).forEach((key) => {
-                if (data[key] !== null && data[key] !== undefined) {
-                  formData.append(key, String(data[key]));
-                }
-              });
-              const success = navigator.sendBeacon(endpoint, formData);
-              console.log("Beacon sent:", success);
-            } else {
-              fetch(endpoint, {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                  Accept: "application/json",
-                },
-                body: JSON.stringify(data),
-                keepalive: true,
-                mode: "cors",
-                credentials: "same-origin",
-              })
-                .then((response) => {
-                  if (!response.ok) {
-                    console.error(
-                      "Tracking failed:",
-                      response.status,
-                      response.statusText
-                    );
-                  }
-                  return response.json();
-                })
-                .then((result) => {
-                  console.log("Tracking successful:", result);
-                })
-                .catch((error) => {
-                  console.error("Tracking error:", error);
-                });
-            }
-          }
-        }
-
-        // Initialize when DOM is ready
-        if (document.readyState === "loading") {
-          document.addEventListener("DOMContentLoaded", () => {
-            console.log("DOM loaded, initializing email tracker...");
-            new EmailTracker();
+            this.sendTracking("/track/internal-click", data, true);
           });
-        } else {
-          console.log("DOM already loaded, initializing email tracker...");
-          new EmailTracker();
         }
 
-        // Export for debugging
-        window.EmailTracker = EmailTracker;
-      })();
+        determineLinkType(link) {
+          const href = link.href.toLowerCase();
+          const text = link.textContent?.toLowerCase() || "";
+
+          if (href.includes("/production")) return "production";
+          if (href.includes("/material-cost")) return "material_cost";
+          if (href.includes("/design-cad")) return "design_cad";
+          if (href.includes("/casting")) return "casting";
+          if (href.includes("/finishing")) return "finishing";
+          if (href.includes("/quality-control")) return "quality_control";
+          if (href.includes("/executive")) return "executive";
+          if (href.includes("/pq-offering")) return "services";
+
+          return "other";
+        }
+
+        sendTracking(endpoint, data, useBeacon = false) {
+          const url = endpoint;
+
+          if (useBeacon && navigator.sendBeacon) {
+            const formData = new FormData();
+            Object.keys(data).forEach((key) => {
+              formData.append(key, data[key]);
+            });
+            navigator.sendBeacon(url, formData);
+          } else {
+            fetch(url, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+              },
+              body: JSON.stringify(data),
+              keepalive: true,
+            }).catch(console.error);
+          }
+        }
+      }
+
+      // Initialize when DOM is ready
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", () => new EmailTracker());
+      } else {
+        new EmailTracker();
+      }
     </script>
   </body>
 </html>
