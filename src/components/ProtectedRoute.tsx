@@ -22,10 +22,16 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   }
 
   if (!isAuthenticated) {
-    // Store current URL parameters for tracking
-    const searchParams = new URLSearchParams(location.search);
-    const trackingParams: Record<string, string> = {};
+    // Preserve the entire URL (path + query params)
+    const returnTo = `${location.pathname}${location.search}`;
 
+    // Store in localStorage for redirect after login
+    if (returnTo !== "/") {
+      localStorage.setItem("pq_return_to", returnTo);
+    }
+
+    // Extract and preserve tracking params for login page
+    const searchParams = new URLSearchParams(location.search);
     const trackingKeys = [
       "campaign_id",
       "lead_id",
@@ -39,6 +45,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
       "link_type",
     ];
 
+    const trackingParams: Record<string, string> = {};
     trackingKeys.forEach((key) => {
       const value = searchParams.get(key);
       if (value) {
@@ -46,7 +53,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
       }
     });
 
-    // Store in localStorage before redirecting
+    // Store tracking params for login page
     if (Object.keys(trackingParams).length > 0) {
       localStorage.setItem(
         "pq_tracking_params",
@@ -54,7 +61,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
       );
     }
 
-    // Redirect to login with preserved parameters
+    // Redirect to login with preserved query params
     const loginPath = `/login${location.search}`;
     return <Navigate to={loginPath} replace />;
   }

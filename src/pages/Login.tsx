@@ -74,11 +74,34 @@ const Login = () => {
   const { toast } = useToast();
   const { isAuthenticated, login, isLoading: authLoading } = useAuth();
 
-  // Extract tracking params from URL on mount and auto-login if demo credentials
+  // Check for auto-login on mount
+  useEffect(() => {
+    const checkAutoLogin = () => {
+      const shouldAutoLogin =
+        localStorage.getItem("pq_demo_auto_login") === "true";
+
+      if (shouldAutoLogin) {
+        // Auto-login with demo credentials
+        setUsername(VALID_USERNAME);
+        setPassword(VALID_PASSWORD);
+
+        // Clear the flag
+        localStorage.removeItem("pq_demo_auto_login");
+
+        // Trigger auto-login after a short delay
+        setTimeout(() => {
+          handleAutoLogin();
+        }, 1000);
+      }
+    };
+
+    checkAutoLogin();
+  }, []);
+
+  // Extract tracking params from URL on mount
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
 
-    // Extract and store tracking params
     const trackingKeys = [
       "campaign_id",
       "lead_id",
@@ -90,8 +113,6 @@ const Login = () => {
       "utm_term",
       "utm_content",
       "link_type",
-      "click_time",
-      "click_tracked",
     ];
 
     const trackingParams: Record<string, string> = {};
@@ -102,27 +123,13 @@ const Login = () => {
       }
     });
 
+    // Store tracking params from URL
     if (Object.keys(trackingParams).length > 0) {
       localStorage.setItem(
         "pq_tracking_params",
         JSON.stringify(trackingParams)
       );
-      console.log("Tracking params preserved on login page:", trackingParams);
-    }
-
-    // Check for demo credentials in URL
-    const urlUsername = searchParams.get("username");
-    const urlPassword = searchParams.get("password");
-
-    if (urlUsername === VALID_USERNAME && urlPassword === VALID_PASSWORD) {
-      // Auto-login with demo credentials
-      setUsername(VALID_USERNAME);
-      setPassword(VALID_PASSWORD);
-
-      // Auto-submit form after a short delay
-      setTimeout(() => {
-        handleAutoLogin();
-      }, 1000);
+      console.log("Login page extracted tracking params:", trackingParams);
     }
   }, [location.search]);
 
@@ -144,22 +151,30 @@ const Login = () => {
   // Redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated && !authLoading) {
-      // Get tracking params from localStorage
+      // Get return URL from localStorage or default to dashboard
+      const returnTo = localStorage.getItem("pq_return_to") || "/";
+      localStorage.removeItem("pq_return_to");
+
+      // Get tracking params for redirect
       const trackingParams = localStorage.getItem("pq_tracking_params");
-      let redirectPath = "/";
 
       if (trackingParams) {
         try {
           const params = JSON.parse(trackingParams);
           const queryString = new URLSearchParams(params).toString();
-          redirectPath = `/?${queryString}`;
-          console.log("Redirecting with tracking params:", params);
+
+          if (returnTo === "/") {
+            navigate(`/?${queryString}`);
+          } else {
+            navigate(`${returnTo}?${queryString}`);
+          }
         } catch (e) {
           console.error("Error parsing tracking params:", e);
+          navigate(returnTo);
         }
+      } else {
+        navigate(returnTo);
       }
-
-      navigate(redirectPath);
     }
   }, [isAuthenticated, authLoading, navigate]);
 
@@ -207,7 +222,7 @@ const Login = () => {
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <div className="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin" />
-          <p className="text-white">Loading authentication...</p>
+          <p className="text-white">Loading...</p>
         </div>
       </div>
     );
@@ -271,7 +286,7 @@ const Login = () => {
             </motion.p>
           </div>
 
-          {/* Features Grid - Responsive layout */}
+          {/* Features Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 lg:gap-4 mb-4 sm:mb-6 lg:mb-10">
             {features.map((feature, index) => (
               <motion.div
@@ -340,6 +355,15 @@ const Login = () => {
                 <p className="text-muted-foreground text-xs sm:text-sm lg:text-base">
                   Sign in to access your dashboard
                 </p>
+
+                {/* Show tracking params if present */}
+                {location.search && (
+                  <div className="mt-2 p-2 bg-blue-50 rounded text-xs">
+                    <p className="text-blue-600">
+                      Tracking parameters detected
+                    </p>
+                  </div>
+                )}
               </div>
 
               <form
@@ -490,32 +514,23 @@ const Login = () => {
                   </Button>
                 </motion.div>
 
-                {/* Demo Credentials Notice */}
-                {(location.search.includes("username=pq.demo") ||
-                  location.search.includes("campaign_id")) && (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.7 }}
-                    className="text-center"
-                  >
-                    <p className="text-xs text-muted-foreground">
-                      Using demo credentials? Click Sign In or wait for
-                      auto-login
-                    </p>
-                  </motion.div>
-                )}
+                {/* Demo Credentials Info */}
+                <div className="text-center">
+                  <p className="text-xs text-muted-foreground">
+                    Demo Credentials: <strong>pq.demo</strong> /{" "}
+                    <strong>pq@demo</strong>
+                  </p>
+                </div>
               </form>
 
               {/* Developer Info Section */}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.8 }}
+                transition={{ delay: 0.7 }}
                 className="mt-4 sm:mt-6 lg:mt-8 pt-3 sm:pt-4 lg:pt-6 border-t border-border/50"
               >
                 <div className="space-y-2 sm:space-y-3">
-                  {/* Developer by line */}
                   <div className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2">
                     <span className="text-xs text-muted-foreground">
                       Developed by
@@ -531,7 +546,6 @@ const Login = () => {
                     </motion.div>
                   </div>
 
-                  {/* Contact info */}
                   <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 flex-wrap">
                     <a
                       href="tel:7219623991"
@@ -549,7 +563,6 @@ const Login = () => {
                     </a>
                   </div>
 
-                  {/* Please Visit + Links */}
                   <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 flex-wrap">
                     <span className="text-xs text-muted-foreground">
                       Please Visit:

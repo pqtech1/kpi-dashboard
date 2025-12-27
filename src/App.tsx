@@ -2,7 +2,13 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+} from "react-router-dom";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { AuthProvider, useAuth } from "@/hooks/useAuth";
 import ProtectedRoute from "@/components/ProtectedRoute";
@@ -25,17 +31,15 @@ import ICEGateSolution from "./pages/solutions/ICEGateSolution";
 import KPIDashboardSolution from "./pages/solutions/KPIDashboardSolution";
 import NotFound from "./pages/NotFound";
 import { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
 
 const queryClient = new QueryClient();
 
-// Component to handle initial landing with params
-const LandingHandler = () => {
+// Component to handle root path with tracking params
+const RootRedirect = () => {
   const location = useLocation();
-  const navigate = useNavigate();
   const { isAuthenticated, isLoading } = useAuth();
 
-  // Extract and store tracking params immediately
+  // Extract and store tracking params
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
 
@@ -67,10 +71,7 @@ const LandingHandler = () => {
         "pq_tracking_params",
         JSON.stringify(trackingParams)
       );
-      console.log("LandingHandler stored tracking params:", trackingParams);
-
-      // Send immediate page view for landing
-      sendLandingPageView(trackingParams);
+      console.log("RootRedirect stored tracking params:", trackingParams);
     }
 
     // Check for demo credentials
@@ -78,71 +79,28 @@ const LandingHandler = () => {
     const password = searchParams.get("password");
 
     if (username === "pq.demo" && password === "pq@demo") {
-      // Store for auto-login
       localStorage.setItem("pq_demo_auto_login", "true");
-      localStorage.setItem(
-        "pq_demo_params",
-        JSON.stringify({
-          username: username,
-          password: password,
-          timestamp: Date.now(),
-        })
-      );
     }
   }, [location.search]);
 
-  const sendLandingPageView = (params: Record<string, string>) => {
-    const data = {
-      ...params,
-      page_url: window.location.href,
-      page_title: "Jewel INTEGRA Landing",
-      referrer: document.referrer,
-      event_type: "landing_page",
-      timestamp: new Date().toISOString(),
-    };
-
-    fetch("https://techupgrad.in/crm/track/page-view", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-      keepalive: true,
-    }).catch(console.error);
-  };
-
-  // Handle redirection based on auth state
-  useEffect(() => {
-    if (!isLoading) {
-      if (isAuthenticated) {
-        // Already logged in, go to dashboard with params
-        const searchParams = new URLSearchParams(location.search);
-        if (searchParams.toString()) {
-          navigate(`/?${searchParams.toString()}`);
-        } else {
-          navigate("/");
-        }
-      } else {
-        // Not logged in, go to login with params preserved
-        const loginPath = `/login${location.search}`;
-        navigate(loginPath);
-      }
-    }
-  }, [isAuthenticated, isLoading, location.search, navigate]);
-
-  // Show loading while checking
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-4">
           <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-          <p className="text-white">Loading Jewel INTEGRA...</p>
+          <p className="text-muted-foreground">Loading...</p>
         </div>
       </div>
     );
   }
 
-  return null; // Will redirect in useEffect
+  if (isAuthenticated) {
+    // Already logged in, go to dashboard
+    return <Navigate to={`/${location.search}`} replace />;
+  }
+
+  // Not logged in, go to login with preserved params
+  return <Navigate to={`/login${location.search}`} replace />;
 };
 
 const ProtectedDashboard = () => (
@@ -183,13 +141,13 @@ const App = () => (
       <BrowserRouter basename="/kpi">
         <AuthProvider>
           <Routes>
-            {/* Root path - handle initial landing with tracking params */}
-            <Route path="/" element={<LandingHandler />} />
+            {/* Root path */}
+            <Route path="/" element={<RootRedirect />} />
 
-            {/* Login page - preserves params */}
+            {/* Login page */}
             <Route path="/login" element={<Login />} />
 
-            {/* Protected routes */}
+            {/* All protected routes */}
             <Route
               path="/*"
               element={
