@@ -1,4 +1,4 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 
 interface ProtectedRouteProps {
@@ -7,6 +7,8 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const { isAuthenticated, isLoading } = useAuth();
+
+  const location = useLocation();  
 
   // Show loading while checking auth state
   if (isLoading) {
@@ -20,9 +22,16 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     );
   }
 
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
+   if (!isAuthenticated) {
+     // Get current query parameters
+     const searchParams = new URLSearchParams(location.search);
+
+     // Preserve ALL existing parameters
+     const redirectUrl = `/login?${searchParams.toString()}`;
+
+     console.log("Redirecting to login with params:", redirectUrl);
+     return <Navigate to={redirectUrl} replace />;
+   }
 
   return <>{children}</>;
 };

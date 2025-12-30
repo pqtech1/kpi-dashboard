@@ -93,7 +93,38 @@ const Login = () => {
         title: "Welcome back!",
         description: "Login successful. Redirecting to dashboard...",
       });
-      setTimeout(() => navigate("/"), 500);
+
+      // ========== CRITICAL: Get tracking params and redirect ==========
+      const campaignId =
+        localStorage.getItem("tracking_campaign_id") ||
+        sessionStorage.getItem("tracking_campaign_id");
+      const leadId =
+        localStorage.getItem("tracking_lead_id") ||
+        sessionStorage.getItem("tracking_lead_id");
+      const email =
+        localStorage.getItem("tracking_email") ||
+        sessionStorage.getItem("tracking_email");
+
+      let redirectUrl = "/";
+
+      // If we have tracking params, add them to the redirect URL
+      if (campaignId && leadId && email) {
+        const params = new URLSearchParams({
+          campaign_id: campaignId,
+          lead_id: leadId,
+          email: email,
+          login_time: Date.now().toString(),
+        });
+        redirectUrl = `/?${params.toString()}`;
+
+        console.log("Redirecting with tracking params:", {
+          campaignId,
+          leadId,
+          email,
+        });
+      }
+
+      setTimeout(() => navigate(redirectUrl), 500);
     } else {
       toast({
         title: "Login Failed",
