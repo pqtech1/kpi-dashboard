@@ -23,8 +23,14 @@ import ERPIntegrationSolution from "./pages/solutions/ERPIntegrationSolution";
 import ICEGateSolution from "./pages/solutions/ICEGateSolution";
 import KPIDashboardSolution from "./pages/solutions/KPIDashboardSolution";
 import NotFound from "./pages/NotFound";
+import { trackingService } from "@/services/tracking";
 
 const queryClient = new QueryClient();
+
+// Initialize tracking ONCE when app loads
+if (typeof window !== 'undefined') {
+  trackingService.initialize(); // <-- ADD THIS
+}
 
 const ProtectedDashboard = () => (
   <ProtectedRoute>
