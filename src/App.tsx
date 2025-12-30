@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { AuthProvider } from "@/hooks/useAuth";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import { trackingService } from "@/services/tracking"; // <-- ADD THIS LINE
 import Login from "./pages/Login";
 import Overview from "./pages/Overview";
 import ProductionTracking from "./pages/ProductionTracking";
@@ -23,13 +24,12 @@ import ERPIntegrationSolution from "./pages/solutions/ERPIntegrationSolution";
 import ICEGateSolution from "./pages/solutions/ICEGateSolution";
 import KPIDashboardSolution from "./pages/solutions/KPIDashboardSolution";
 import NotFound from "./pages/NotFound";
-import { trackingService } from "@/services/tracking";
 
 const queryClient = new QueryClient();
 
-// Initialize tracking ONCE when app loads
-if (typeof window !== 'undefined') {
-  trackingService.initialize(); // <-- ADD THIS
+// Initialize tracking when app loads
+if (typeof window !== "undefined") {
+  setTimeout(() => trackingService.initialize(), 1000); // <-- ADD THIS LINE
 }
 
 const ProtectedDashboard = () => (
@@ -71,7 +71,6 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      {/* Add basename="/kpi" here */}
       <BrowserRouter basename="/kpi">
         <AuthProvider>
           <Routes>
