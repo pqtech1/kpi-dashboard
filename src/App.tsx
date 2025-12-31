@@ -75,30 +75,66 @@ const ParamPreserver = () => {
     }
   }, [location, navigate, isAuthenticated]);
 };
+
+
 const sendPageView = async (
   campaignId: string,
   leadId: string,
   email: string
 ) => {
   try {
-   await fetch("https://techupgrad.in/crm/email/track-page-view", {
-     // ✓ CORRECT
-     method: "POST",
-     headers: { "Content-Type": "application/json" },
-     body: JSON.stringify({
-       campaign_id: campaignId,
-       lead_id: leadId,
-       email: email,
-       page_url: window.location.href,
-       page_title: document.title,
-       session_id: "session_" + Date.now(),
-     }),
-   });
-    console.log("📊 Initial page view tracked");
+    console.log('📤 Sending page view to:', 'https://techupgrad.in/crm/email/track-page-view');
+    
+    const response = await fetch("https://techupgrad.in/crm/email/track-page-view", {
+      method: "POST",
+      mode: "cors", // Add this
+      credentials: "include", // Add this for cookies if needed
+      headers: { 
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+      },
+      body: JSON.stringify({
+        campaign_id: campaignId,
+        lead_id: leadId,
+        email: email,
+        page_url: window.location.href,
+        page_title: document.title,
+        session_id: "session_" + Date.now(),
+      }),
+    });
+    
+    if (!response.ok) {
+      console.warn('⚠️ Tracking returned status:', response.status);
+    } else {
+      const data = await response.json();
+      console.log('✅ Page view tracked:', data);
+    }
   } catch (error) {
-    console.error("Tracking error:", error);
+    console.error('❌ Tracking error:', error);
+    
+    // Fallback: Try GET request
+    try {
+      const params = new URLSearchParams({
+        campaign_id: campaignId,
+        lead_id: leadId,
+        email: email,
+        page_url: window.location.href,
+        page_title: document.title,
+        session_id: "session_" + Date.now(),
+      }).toString();
+      
+      await fetch(`https://techupgrad.in/crm/email/track-page-view?${params}`, {
+        method: "GET",
+        mode: "no-cors",
+      });
+      console.log('📊 Page view tracked (GET fallback)');
+    } catch (fallbackError) {
+      console.error('❌ Fallback tracking also failed:', fallbackError);
+    }
   }
 };
+
+
 // ========== END PARAM PRESERVER ==========
 
 // ========== TRACKING WRAPPER COMPONENT ==========
@@ -121,7 +157,7 @@ const TrackingWrapper = ({ children }: { children: React.ReactNode }) => {
       if (campaignId && leadId && email) {
         try {
         await fetch("https://techupgrad.in/crm/email/track-page-view", {
-          // ✓ CORRECT
+          // ✅ WITH /crm/
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
