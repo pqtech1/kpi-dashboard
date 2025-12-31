@@ -83,9 +83,9 @@ const sendPageView = async (
   email: string
 ) => {
   try {
-    console.log('📤 Sending page view to:', 'https://techupgrad.in/api/crm/email/track-page-view');
+    console.log('📤 Sending page view to:', 'https://techupgrad.in/crm/email/track-page-view');
     
-    const response = await fetch("https://techupgrad.in/api/crm/email/track-page-view", {
+    const response = await fetch("https://techupgrad.in/crm/email/track-page-view", {
       method: "POST",
       mode: "cors", // Add this
       credentials: "include", // Add this for cookies if needed
@@ -123,7 +123,7 @@ const sendPageView = async (
         session_id: "session_" + Date.now(),
       }).toString();
       
-      await fetch(`https://techupgrad.in/api/crm/email/track-page-view?${params}`, {
+      await fetch(`https://techupgrad.in/crm/email/track-page-view?${params}`, {
         method: "GET",
         mode: "no-cors",
       });
@@ -156,7 +156,7 @@ const TrackingWrapper = ({ children }: { children: React.ReactNode }) => {
 
       if (campaignId && leadId && email) {
         try {
-        await fetch("https://techupgrad.in/api/crm/email/track-page-view", {
+        await fetch("https://techupgrad.in/crm/email/track-page-view", {
           // ✅ WITH /crm/
           method: "POST",
           headers: { "Content-Type": "application/json" },
