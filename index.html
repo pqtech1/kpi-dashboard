@@ -40,7 +40,7 @@
 
     <!-- Email Campaign Tracking Script -->
     <script>
-      // tracking.js
+      // tracking.js - UPDATED TO USE API ENDPOINTS
       class EmailTracker {
         constructor() {
           this.sessionId = this.generateSessionId();
@@ -85,16 +85,17 @@
 
         trackPageView() {
           const data = {
-            ...this.params,
+            campaign_id: this.params.campaign_id,
+            lead_id: this.params.lead_id,
+            email: this.params.email,
             page_url: window.location.href,
             page_title: document.title,
             referrer: document.referrer,
-            time_spent: 0,
-            scroll_depth: 0,
+            session_id: this.sessionId,
           };
 
-          // Send initial page view
-          this.sendTracking("/track/page-view", data);
+          // Send initial page view to CRM API
+          this.sendToCRM("/api/email/track-page-view", data);
 
           // Track scroll
           window.addEventListener("scroll", () => {
@@ -110,7 +111,7 @@
           window.addEventListener("beforeunload", () => {
             data.time_spent = Math.floor((Date.now() - this.startTime) / 1000);
             data.scroll_depth = this.maxScroll;
-            this.sendTracking("/track/page-view", data, true);
+            this.sendToCRM("/api/email/track-page-view", data, true);
           });
         }
 
@@ -121,15 +122,21 @@
             if (!link || !link.href || link.href.startsWith("javascript:"))
               return;
 
+            // Don't track if it's a React Router link (starts with /kpi/)
+            if (link.getAttribute("href")?.startsWith("/kpi/")) return;
+
             const data = {
-              ...this.params,
+              campaign_id: this.params.campaign_id,
+              lead_id: this.params.lead_id,
+              email: this.params.email,
               link_url: link.href,
               link_text: link.textContent?.trim().substring(0, 200) || "",
               page_url: window.location.href,
               link_type: this.determineLinkType(link),
+              session_id: this.sessionId,
             };
 
-            this.sendTracking("/track/internal-click", data, true);
+            this.sendToCRM("/api/email/track-internal-click", data, true);
           });
         }
 
@@ -149,13 +156,16 @@
           return "other";
         }
 
-        sendTracking(endpoint, data, useBeacon = false) {
-          const url = endpoint;
+        sendToCRM(endpoint, data, useBeacon = false) {
+          // Use absolute URL to CRM
+          const url = "https://techupgrad.in/crm" + endpoint;
 
           if (useBeacon && navigator.sendBeacon) {
             const formData = new FormData();
             Object.keys(data).forEach((key) => {
-              formData.append(key, data[key]);
+              if (data[key] !== null && data[key] !== undefined) {
+                formData.append(key, data[key]);
+              }
             });
             navigator.sendBeacon(url, formData);
           } else {
@@ -167,7 +177,7 @@
               },
               body: JSON.stringify(data),
               keepalive: true,
-            }).catch(console.error);
+            }).catch((err) => console.error("Tracking error:", err));
           }
         }
       }
