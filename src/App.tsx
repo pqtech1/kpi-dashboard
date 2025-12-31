@@ -75,31 +75,24 @@ const ParamPreserver = () => {
     }
   }, [location, navigate, isAuthenticated]);
 
-  const sendPageView = async (
-    campaignId: string,
-    leadId: string,
-    email: string
-  ) => {
-    try {
-      await fetch("https://techupgrad.in/crm/email/track-page-view", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          campaign_id: campaignId,
-          lead_id: leadId,
-          email: email,
-          page_url: window.location.href,
-          page_title: document.title,
-          session_id: "session_" + Date.now(),
-        }),
-      });
-      console.log("📊 Initial page view tracked");
-    } catch (error) {
-      console.error("Tracking error:", error);
-    }
-  };
-
-  return null;
+ const sendPageView = async (campaignId: string, leadId: string, email: string) => {
+  try {
+    await fetch("https://techupgrad.in/crm/email/track-page-view", {
+      method: "POST",  // Make sure this is POST
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        campaign_id: campaignId,
+        lead_id: leadId,
+        email: email,
+        page_url: window.location.href,
+        page_title: document.title,
+        session_id: "session_" + Date.now(),
+      }),
+    });
+    console.log("📊 Initial page view tracked");
+  } catch (error) {
+    console.error("Tracking error:", error);
+  }
 };
 // ========== END PARAM PRESERVER ==========
 
