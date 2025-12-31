@@ -74,11 +74,15 @@ const ParamPreserver = () => {
       navigate(dashboardUrl);
     }
   }, [location, navigate, isAuthenticated]);
-
- const sendPageView = async (campaignId: string, leadId: string, email: string) => {
+};
+const sendPageView = async (
+  campaignId: string,
+  leadId: string,
+  email: string
+) => {
   try {
     await fetch("https://techupgrad.in/crm/email/track-page-view", {
-      method: "POST",  // Make sure this is POST
+      method: "POST", // Make sure this is POST
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         campaign_id: campaignId,
