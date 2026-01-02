@@ -57,11 +57,11 @@ const ParamPreserver = () => {
       sessionStorage.setItem("tracking_lead_id", leadId);
       sessionStorage.setItem("tracking_email", email);
 
-      console.log("✅ Tracking parameters saved:", {
-        campaignId,
-        leadId,
-        email,
-      });
+      // console.log("✅ Tracking parameters saved:", {
+      //   campaignId,
+      //   leadId,
+      //   email,
+      // });
 
       // Send initial page view to Laravel
       sendPageView(campaignId, leadId, email);
@@ -83,7 +83,7 @@ const sendPageView = async (
   email: string
 ) => {
   try {
-    console.log('📤 Sending page view to:', 'https://techupgrad.in/crm/api/email/track-page-view');
+    // console.log('📤 Sending page view to:', 'https://techupgrad.in/crm/api/email/track-page-view');
     
     const response = await fetch("https://techupgrad.in/crm/api/email/track-page-view", {
       method: "POST",
@@ -104,13 +104,13 @@ const sendPageView = async (
     });
     
     if (!response.ok) {
-      console.warn('⚠️ Tracking returned status:', response.status);
+      // console.warn('⚠️ Tracking returned status:', response.status);
     } else {
       const data = await response.json();
-      console.log('✅ Page view tracked:', data);
+      // console.log('✅ Page view tracked:', data);
     }
   } catch (error) {
-    console.error('❌ Tracking error:', error);
+    // console.error('❌ Tracking error:', error);
     
     // Fallback: Try GET request
     try {
@@ -127,9 +127,9 @@ const sendPageView = async (
         method: "GET",
         mode: "no-cors",
       });
-      console.log('📊 Page view tracked (GET fallback)');
+      // console.log('📊 Page view tracked (GET fallback)');
     } catch (fallbackError) {
-      console.error('❌ Fallback tracking also failed:', fallbackError);
+      // console.error('❌ Fallback tracking also failed:', fallbackError);
     }
   }
 };
@@ -169,9 +169,9 @@ const TrackingWrapper = ({ children }: { children: React.ReactNode }) => {
             session_id: "session_" + Date.now(),
           }),
         });
-          console.log("📊 Page view tracked:", location.pathname);
+          // console.log("📊 Page view tracked:", location.pathname);
         } catch (error) {
-          console.error("Page tracking error:", error);
+          // console.error("Page tracking error:", error);
         }
       }
     };
